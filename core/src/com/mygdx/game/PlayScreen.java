@@ -26,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class PlayScreen implements Screen{
 
+	private SoundManager soundManager;
 	private SpriteBatch batch;
 	private Texture img;
 	private Sprite playerSprite;
@@ -35,7 +36,6 @@ public class PlayScreen implements Screen{
 	private World world;
 
 	private Player player;
-	private List<SoundParticle> particles;
 
 	private GameMap map;
 
@@ -43,9 +43,8 @@ public class PlayScreen implements Screen{
 	private Matrix4 debugMatrix;
 
 	private float deltaTime;
-	// ShapeRenderer shapeRenderer;
 	private ShapeRenderer shapeRenderer;
-	
+
 	public PlayScreen(String mapPath) {
 		
 		batch = new SpriteBatch();
@@ -67,9 +66,9 @@ public class PlayScreen implements Screen{
 		map = new GameMap(world);
 		map.LoadFromFile(world, "filename");
 
-		particles = new ArrayList<SoundParticle>();
 		shapeRenderer = new ShapeRenderer();
 
+		soundManager = new SoundManager(world);
 		SetCollisionListener();
 	}
 	
@@ -96,19 +95,7 @@ public class PlayScreen implements Screen{
 		// debugRenderer.render(world, debugMatrix);
 		batch.end();
 
-		for (SoundParticle particle : particles) {
-			particle.Draw(shapeRenderer);
-			if (particle.GetLifeTime() > 5) {
-				particle.DestroyBody();
-				System.out.println("destroyed");
-			}
-		}
-		for (int i = 0; i < particles.size(); i++) {
-			if (particles.get(i).body == null) {
-				particles.remove(i);
-				i--;
-			}
-		}
+		soundManager.draw(shapeRenderer);
 		
 	}
 
@@ -165,7 +152,7 @@ public class PlayScreen implements Screen{
 			Vector2 position = new Vector2();
 			position.x = v3.x;
 			position.y = v3.y;
-			SoundParticle.emit(position, 250, 1000, world, particles);
+			soundManager.addEmitter(new SoundEmitter(position, world));
 		}
 	}
 	
@@ -174,14 +161,7 @@ public class PlayScreen implements Screen{
 
 			@Override
 			public void beginContact(Contact contact) {
-				Fixture fixtureA = contact.getFixtureA();
-				Fixture fixtureB = contact.getFixtureB();
-				if (fixtureB.getBody().getUserData() instanceof SoundParticle) {
-					fixtureB.getBody().setLinearVelocity(0, 0);
-				}
-				if (fixtureA.getBody().getUserData() instanceof SoundParticle) {
-					fixtureA.getBody().setLinearVelocity(0, 0);
-				}
+
 			}
 
 			@Override
