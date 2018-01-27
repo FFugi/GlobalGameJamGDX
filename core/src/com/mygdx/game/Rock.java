@@ -13,20 +13,17 @@ public class Rock {
 	
 	Rock(World world, Vector2[] vertices){
 		
-		this.body=body;
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.StaticBody;
 		bodyDef.position.set(200,300);
 	
-   
-	   
-		
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
         
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
+		fixtureDef.filter.categoryBits = 1;
 		
 		this.body = world.createBody(bodyDef);
 		 

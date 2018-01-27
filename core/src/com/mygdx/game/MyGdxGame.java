@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -80,7 +82,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		batch.begin();
 		// BoxObjectManager.GetWorld() gets the reference to Box2d World object
-		debugRenderer.render(world, debugMatrix);
+		//debugRenderer.render(world, debugMatrix);
 		batch.end();
 
 	}
@@ -105,5 +107,15 @@ public class MyGdxGame extends ApplicationAdapter {
 			horizontalInput = 1;
 		}
 		player.setVelocity(horizontalInput, verticalInput);
+
+		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+			int x = Gdx.input.getX();
+			int y = Gdx.input.getY();
+			Vector3 v3 = camera.unproject(new Vector3(x, y, 0));
+			Vector2 position = new Vector2();
+			position.x = v3.x;
+            position.y = v3.y;
+			SoundParticle.emit(position, 500, 1000, world);
+		}
 	}
 }
