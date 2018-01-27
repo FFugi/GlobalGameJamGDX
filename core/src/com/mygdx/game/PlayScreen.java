@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -24,7 +25,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class PlayScreen implements Screen{
+public class PlayScreen implements Screen {
 
 	private SoundManager soundManager;
 	private SpriteBatch batch;
@@ -46,7 +47,7 @@ public class PlayScreen implements Screen{
 	private ShapeRenderer shapeRenderer;
 
 	public PlayScreen(String mapPath) {
-		
+
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		playerSprite = new Sprite(img);
@@ -63,19 +64,19 @@ public class PlayScreen implements Screen{
 		debugMatrix.translate(-Gdx.graphics.getWidth() / 2, -Gdx.graphics.getHeight() / 2, 0);
 
 		debugRenderer = new Box2DDebugRenderer();
-		map = new GameMap(world);
-		map.LoadFromFile(world, "filename");
+
+		map = GameMap.LoadFromFile(world, "filename");
 
 		shapeRenderer = new ShapeRenderer();
 
 		soundManager = new SoundManager(world);
 		SetCollisionListener();
 	}
-	
+
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -92,37 +93,56 @@ public class PlayScreen implements Screen{
 		player.Draw(batch);
 
 		batch.begin();
-		//
+
 		debugRenderer.render(world, debugMatrix);
-		//
+
 		batch.end();
 
 		soundManager.draw(shapeRenderer);
 		
+		
+		List<Rock> objects=map.getObjects();
+        for (Rock object : objects) {
+            for (Vector2 pos : object.getVertices()) {
+               shapeRenderer.begin(ShapeType.Filled);
+               shapeRenderer.setColor(1, 0, 0, 1);
+               shapeRenderer.circle(pos.x, pos.y, 3);
+               shapeRenderer.end();
+            }
+
+            for (Vector2 center : object.getCenters()) {
+                shapeRenderer.begin(ShapeType.Filled);
+                shapeRenderer.setColor(0, 0, 1, 1);
+                shapeRenderer.circle(center.x, center.y, 3);
+                shapeRenderer.end();
+            }
+        }
+
+
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -131,7 +151,6 @@ public class PlayScreen implements Screen{
 		img.dispose();
 	}
 
-	
 	public void HandleInput() {
 		float verticalInput = 0;
 		float horizontalInput = 0;
@@ -159,7 +178,7 @@ public class PlayScreen implements Screen{
 			soundManager.addEmitter(new SoundEmitter(position, world, maxAge, radius));
 		}
 	}
-	
+
 	public void SetCollisionListener() {
 		world.setContactListener(new ContactListener() {
 
