@@ -32,7 +32,8 @@ public class PlayScreen implements Screen {
 	private Texture img;
 	private Sprite playerSprite;
 	private OrthographicCamera camera;
-	private List<SoundParticle> particles;
+
+	private ParticleManager particleManager;
 
 	// Box2d World
 	private World world;
@@ -46,8 +47,6 @@ public class PlayScreen implements Screen {
 
 	private float deltaTime;
 	private ShapeRenderer shapeRenderer;
-	
-	public static final float PPM=32;
 
 	public PlayScreen(String mapPath) {
 
@@ -58,7 +57,7 @@ public class PlayScreen implements Screen {
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 
-		// Box2d experiments 
+		// Box2d experiments
 		world = new World(new Vector2(0, 0), true);
 		world.setContinuousPhysics(true);
 
@@ -75,8 +74,8 @@ public class PlayScreen implements Screen {
 
 		soundManager = new SoundManager(world);
 		SetCollisionListener();
-		
-		particles = new ArrayList<SoundParticle>();
+
+		particleManager = new ParticleManager(world);
 	}
 
 	@Override
@@ -92,11 +91,13 @@ public class PlayScreen implements Screen {
 
 
 		world.step(1/30f, 6, 2);
+
 		SetCamera();
 
 		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         soundManager.draw(shapeRenderer);
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -105,30 +106,24 @@ public class PlayScreen implements Screen {
         map.gates.forEach(c -> c.Draw(shapeRenderer));
         map.updateGates();
 
+
 		player.Draw(batch);
 
 
-		batch.begin();
+	
 
-		
+
 		debugRenderer.render(world, debugMatrix);
 
+		shapeRenderer.setProjectionMatrix(camera.combined);
+
+		particleManager.DisplayParticles(shapeRenderer);
+		
+		
+		// For debug purpose
+		batch.begin();
+
 		batch.end();
-
-
-		for (SoundParticle particle : particles) {
-			particle.Draw(shapeRenderer);
-			if (particle.GetLifeTime() > 5) {
-				particle.DestroyBody();
-				System.out.println("destroyed");
-			}
-		}
-		for (int i = 0; i < particles.size(); i++) {
-			if (particles.get(i).body == null) {
-				particles.remove(i);
-				i--;
-			}
-		}
 
 		map.captureCollectibles(player);
 
@@ -186,26 +181,26 @@ public class PlayScreen implements Screen {
 	public void HandleInput() {
 		float verticalInput = 0;
 		float horizontalInput = 0;
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
+		if (Gdx.input.isKeyPressed(Keys.W)) {
 			verticalInput = 1;
-		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+		} else if (Gdx.input.isKeyPressed(Keys.S)) {
 			verticalInput = -1;
 		}
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+		if (Gdx.input.isKeyPressed(Keys.A)) {
 			horizontalInput = -1;
-		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+		} else if (Gdx.input.isKeyPressed(Keys.D)) {
 			horizontalInput = 1;
 		}
 		player.setVelocity(horizontalInput, verticalInput);
 
-		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			int x = Gdx.input.getX();
 			int y = Gdx.input.getY();
 			Vector3 v3 = camera.unproject(new Vector3(x, y, 0));
 			Vector2 position = new Vector2();
 			position.x = v3.x;
 			position.y = v3.y;
-			SoundParticle.emit(position, 200, 2000, world, particles);
+			particleManager.RequestBurst(position);
 		}
 	}
 
@@ -242,9 +237,9 @@ public class PlayScreen implements Screen {
 	}
 
 	public void SetCamera() {
-		
+
 		camera.position.x = player.getPosition().x;
-		camera.position.y =player.getPosition().y;
+		camera.position.y = player.getPosition().y;
 		camera.update();
 
 	}
