@@ -3,9 +3,25 @@
     "horizontalBorder": [[0,0], [1600,0], [1600, 20], [0,20]],
     "verticalBorder": [[0,0], [0,600], [20, 600], [20,0]],
     "horizontal100":[[20,10],[120,10],[120,20],[20,20]],
-    "vertical100":[[0,20],[10,20],[10,120],[0,120]]
-
+    "vertical100":[[0,20],[10,20],[10,120],[0,120]],
+    "gatevertical": [[0, 20], [10,20], [10, 120], [0, 120]],
+    "gatehorizontal":[[20,10],[120,10],[120,20],[20,20]]
   },
+  "gates": [
+    {"name": "gatevertical", "position": [210, 0], "count": 1},
+    {"name": "gatehorizontal", "position": [400, 490], "count": 2},
+    {"name": "gatevertical", "position": [710, 190], "count": 3},
+    {"name": "gatevertical", "position": [910, 0], "count": 4},
+    {"name": "gatevertical", "position": [1310, 390], "count": 5}
+  ],
+  "collectibles": [
+    [50, 50],
+    [260,350],
+    [560,250],
+    [660,450],
+    [960,250],
+    [1060,550]
+  ],
   "instances":[
     {"name": "horizontalBorder", "position":[20,0]},
     {"name": "verticalBorder", "position":[0,0]},
