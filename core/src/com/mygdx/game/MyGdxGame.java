@@ -30,20 +30,21 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// Box2d World
 	World world;
-
-	Body testBody;
 	
 	Player player;
 
+	Rock square;
+	
 	Box2DDebugRenderer debugRenderer;
 	Matrix4 debugMatrix;
 
+	
 	float deltaTime;
-	ShapeRenderer shapeRenderer;
+	//ShapeRenderer shapeRenderer;
 
 	@Override
 	public void create() {
-		shapeRenderer=new ShapeRenderer();
+		//shapeRenderer=new ShapeRenderer();
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		playerSprite = new Sprite(img);
@@ -60,29 +61,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		debugMatrix.translate(-Gdx.graphics.getWidth()/2, -Gdx.graphics.getHeight()/2, 0);
 
 		debugRenderer = new Box2DDebugRenderer();
-		
-		
-		
-		// TEST
-		
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyDef.BodyType.StaticBody;
-		bodyDef.position.set(100,200);
-		
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(100, 100);
-
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-		fixtureDef.density = 1f;
-		
-		testBody = world.createBody(bodyDef);
-		 
-		Fixture fixture = testBody.createFixture(fixtureDef);
-		
-		shape.dispose();
-		
-		
+		square=new Rock(world);
 		
 	}
 
