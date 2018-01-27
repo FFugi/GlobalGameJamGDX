@@ -101,7 +101,7 @@ public class PlayScreen implements Screen {
 		batch.begin();
 
 		
-	//	debugRenderer.render(world, debugMatrix);
+		//debugRenderer.render(world, debugMatrix);
 
 		batch.end();
 

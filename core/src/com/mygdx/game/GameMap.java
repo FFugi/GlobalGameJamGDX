@@ -26,7 +26,7 @@ public class GameMap {
 	static GameMap LoadFromFile(World world, String filename) {
 		GameMap map = new GameMap(world);
 
-		JsonValue jsonData = new JsonReader().parse(Gdx.files.internal("maps/level01.json"));
+		JsonValue jsonData = new JsonReader().parse(Gdx.files.internal("maps/maze01.json"));
 		JsonValue jsonObjects = jsonData.get("objects");
 		JsonValue instances = jsonData.get("instances");
 		JsonValue.JsonIterator instanceIterator = instances.iterator();
