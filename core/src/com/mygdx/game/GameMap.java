@@ -65,40 +65,42 @@ public class GameMap {
 		}
 
 		JsonValue gates = jsonData.get("gates");
-		JsonValue.JsonIterator gatesIterator = gates.iterator();
-		while (gatesIterator.hasNext()) {
-			JsonValue gate = gatesIterator.next();
-			String name = gate.getString("name");
-			JsonValue object = jsonObjects.get(name);
-			JsonValue.JsonIterator objectIterator = object.iterator();
-			List<Vector2> vertices = new ArrayList<Vector2>();
-			while (objectIterator.hasNext()) {
-				JsonValue current = objectIterator.next();
-				Vector2 v = new Vector2(current.getFloat(0), current.getFloat(1));
-				vertices.add(v);
-			}
-			Vector2 position = new Vector2();
-			position.x = gate.get("position").getInt(0);
-			position.y = gate.get("position").getInt(1);
-			Vector2 scale;
-			JsonValue jsonScale = gate.get("scale");
-			if (jsonScale == null) {
-				scale = new Vector2(1, 1);
-			} else {
-				scale = new Vector2(jsonScale.getFloat(0), jsonScale.getFloat(1));
-			}
-			float angle = gate.getFloat("angle", 0);
-			gate.get("scale");
-			vertices = vertices.stream()
-					.map(v -> new Vector2(scale.x*v.x, scale.y*v.y))
-					.map(v -> v.rotate(angle))
-					.collect(Collectors.toList());
+		if (gates != null) {
+			JsonValue.JsonIterator gatesIterator = gates.iterator();
+			while (gatesIterator.hasNext()) {
+				JsonValue gate = gatesIterator.next();
+				String name = gate.getString("name");
+				JsonValue object = jsonObjects.get(name);
+				JsonValue.JsonIterator objectIterator = object.iterator();
+				List<Vector2> vertices = new ArrayList<Vector2>();
+				while (objectIterator.hasNext()) {
+					JsonValue current = objectIterator.next();
+					Vector2 v = new Vector2(current.getFloat(0), current.getFloat(1));
+					vertices.add(v);
+				}
+				Vector2 position = new Vector2();
+				position.x = gate.get("position").getInt(0);
+				position.y = gate.get("position").getInt(1);
+				Vector2 scale;
+				JsonValue jsonScale = gate.get("scale");
+				if (jsonScale == null) {
+					scale = new Vector2(1, 1);
+				} else {
+					scale = new Vector2(jsonScale.getFloat(0), jsonScale.getFloat(1));
+				}
+				float angle = gate.getFloat("angle", 0);
+				gate.get("scale");
+				vertices = vertices.stream()
+						.map(v -> new Vector2(scale.x * v.x, scale.y * v.y))
+						.map(v -> v.rotate(angle))
+						.collect(Collectors.toList());
 
-			int count = gate.getInt("count");
-			Gate newgate = new Gate(world, vertices.toArray(new Vector2[vertices.size()]), position, count);
-			map.gates.add(newgate);
+				int count = gate.getInt("count");
+				Gate newgate = new Gate(world, vertices.toArray(new Vector2[vertices.size()]), position, count);
+				map.gates.add(newgate);
+			}
 		}
-
+		
 		JsonValue collectibles = jsonData.get("collectibles");
 		if (collectibles != null) {
 			JsonValue.JsonIterator collectibleIterator = collectibles.iterator();
@@ -108,6 +110,7 @@ public class GameMap {
 				map.collectibles.add(new Collectible(position));
 			}
 		}
+
 		return map;
 	}
 
