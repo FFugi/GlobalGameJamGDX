@@ -9,6 +9,7 @@
   },
   "gates": [
     {"name": "gatevertical", "position": [210, 0], "count": 1},
+    {"name": "gatehorizontal", "position": [100, 100], "count": 1},
     {"name": "gatehorizontal", "position": [400, 490], "count": 2},
     {"name": "gatevertical", "position": [710, 190], "count": 3},
     {"name": "gatevertical", "position": [910, 0], "count": 4},
