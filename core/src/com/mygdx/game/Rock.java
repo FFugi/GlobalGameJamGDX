@@ -11,6 +11,10 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Rock {
 	private Body body;
 	
+	public Body getBody() {
+		return body;
+	}
+
 	Rock(World world, Vector2[] vertices, Vector2 position){
 		
 		BodyDef bodyDef = new BodyDef();

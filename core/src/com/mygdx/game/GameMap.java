@@ -95,4 +95,8 @@ public class GameMap implements Json.Serializable{
 	public void read(Json json, JsonValue jsonData) {
 
 	}
+	
+	public List<Rock> getObjects() {
+		return objects;
+	}
 }
