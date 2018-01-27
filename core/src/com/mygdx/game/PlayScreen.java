@@ -102,14 +102,12 @@ public class PlayScreen implements Screen {
 		map.gates.forEach(c -> c.Draw(shapeRenderer));
 		map.updateGates();
 
-		player.Draw(batch);
-
 		// debugRenderer.render(world, debugMatrix);
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		particleManager.DisplayParticles(shapeRenderer);
-
+		player.Draw(batch);
 		// For debug purpose
 		batch.begin();
 

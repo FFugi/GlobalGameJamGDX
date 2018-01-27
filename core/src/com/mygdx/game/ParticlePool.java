@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class ParticlePool {
 
@@ -16,6 +17,7 @@ public class ParticlePool {
 	private World world;
 	private final static float animationTime=4;
 	float lifeTime;
+	public long timeWhenActivated;
 
 	public ParticlePool(World world) {
 		this.world = world;
@@ -39,14 +41,14 @@ public class ParticlePool {
 				for (SoundParticle particle : particles) {
 					particle.scaleSize = 0;
 					particle.isOnDoor=false;
-					//particle.getBody().setActive(false);
+					particle.getBody().setActive(false);
 				}
 			}
 		}
 	}
 
 	public void Burst(Vector2 position) {
-		isAvailable = false;
+		setAvailable(false);
 		int i = 0;
 		for (SoundParticle particle : particles) {
 			particle.getBody().setActive(true);
@@ -69,6 +71,9 @@ public class ParticlePool {
 			//	particle.getBody().setTransform(new Vector2(-1000, -1000), 0);
 				
 			}
+		}
+		else {
+			timeWhenActivated=TimeUtils.millis();
 		}
 		this.isAvailable = isAvailable;
 	}

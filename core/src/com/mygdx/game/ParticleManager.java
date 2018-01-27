@@ -28,6 +28,7 @@ public class ParticleManager {
 				break;
 			}
 		}
+		particlepools.sort((p1, p2) -> (int)(p1.timeWhenActivated - p2.timeWhenActivated));
 	}
 
 	public void DisplayParticles(ShapeRenderer shaperenderer) {

@@ -28,10 +28,10 @@ public class Collectible {
 		renderer.begin(ShapeRenderer.ShapeType.Filled);
 		if (blinkTimer <= lightenTime) {
 			float progress = blinkTimer / lightenTime;
-			renderer.setColor(1, 0, 0, 0);
+			renderer.setColor(progress, 0, 0, 0);
 		} else {
 			float progress = (blinkTimer - lightenTime) / disappearTime;
-			renderer.setColor(1, 0, 0, 0);
+			renderer.setColor(1-progress, 0, 0, 0);
 		}
 		Gdx.gl.glDisable(GL30.GL_BLEND);
 		renderer.circle(position.x, position.y, radius);
