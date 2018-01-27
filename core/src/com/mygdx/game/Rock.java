@@ -12,6 +12,8 @@ public class Rock {
 	private Body body;
 	
 	Rock(World world, Vector2[] vertices){
+		
+		this.body=body;
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.StaticBody;
 		bodyDef.position.set(200,300);
@@ -26,10 +28,14 @@ public class Rock {
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
 		
-		body = world.createBody(bodyDef);
+		this.body = world.createBody(bodyDef);
 		 
-		Fixture fixture = body.createFixture(fixtureDef);
+		Fixture fixture = this.body.createFixture(fixtureDef);
 		
 		shape.dispose();
+	}
+	
+	public void SetPosition(int x, int y) {
+		body.setTransform(x, y, body.getAngle());
 	}
 }
