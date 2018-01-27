@@ -90,13 +90,21 @@ public class PlayScreen implements Screen {
 		deltaTime = Gdx.graphics.getDeltaTime();
 		HandleInput();
 
+
 		world.step(1/30f, 6, 2);
 		SetCamera();
 
 		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        soundManager.draw(shapeRenderer);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        map.collectibles.forEach(c -> c.Draw(shapeRenderer));
+
 		player.Draw(batch);
+
 
 		batch.begin();
 
@@ -105,10 +113,7 @@ public class PlayScreen implements Screen {
 
 		batch.end();
 
-		soundManager.draw(shapeRenderer);
-		shapeRenderer.setProjectionMatrix(camera.combined);
-	//();
-		
+
 		for (SoundParticle particle : particles) {
 			particle.Draw(shapeRenderer);
 			if (particle.GetLifeTime() > 5) {
@@ -122,6 +127,8 @@ public class PlayScreen implements Screen {
 				i--;
 			}
 		}
+
+		map.captureCollectibles(player);
 
 	}
 

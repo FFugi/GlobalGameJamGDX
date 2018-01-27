@@ -2,25 +2,27 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 public class GameMap {
 
+	private int collected;
+	public List<Collectible> collectibles;
 	private World world;
 	private List<Rock> objects;
 
 	GameMap(World world) {
 		this.world = world;
 		this.objects = new ArrayList<Rock>();
+		this.collectibles = new ArrayList<Collectible>();
+		this.gates = new ArrayList<Gate>();
+		this.collected = 0;
 	}
 
 	static GameMap LoadFromFile(World world, String filename) {
@@ -59,7 +61,16 @@ public class GameMap {
 					.collect(Collectors.toList());
 			Rock rock = new Rock(world, vertices.toArray(new Vector2[vertices.size()]), position);
 			map.objects.add(rock);
+		}
 
+		JsonValue collectibles = jsonData.get("collectibles");
+		if (collectibles != null) {
+			JsonValue.JsonIterator collectibleIterator = collectibles.iterator();
+			while (collectibleIterator.hasNext()) {
+				JsonValue collectible = collectibleIterator.next();
+				Vector2 position = new Vector2(collectible.getFloat(0), collectible.getFloat(1));
+				map.collectibles.add(new Collectible(position));
+			}
 		}
 		return map;
 	}
@@ -67,6 +78,16 @@ public class GameMap {
 	
 	public List<Rock> getObjects() {
 		return objects;
+	}
+
+	public boolean captureCollectibles(Player player) {
+		int size = collectibles.size();
+		collectibles = collectibles.stream()
+				.filter(c -> c.position.dst(player.getPosition()) > c.radius + player.getRadius())
+				.collect(Collectors.toList());
+
+		collected += size - collectibles.size();
+		return size != collectibles.size();
 	}
 
 }

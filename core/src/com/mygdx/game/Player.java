@@ -64,4 +64,8 @@ public class Player extends GameObject {
 	public Vector2 getPosition() {
 		return new Vector2(body.getPosition());
 	}
+
+	public float getRadius() {
+	   	return sprite.getWidth()/2;
+	}
 }
