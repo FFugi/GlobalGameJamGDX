@@ -92,7 +92,9 @@ public class PlayScreen implements Screen{
 		player.Draw(batch);
 
 		batch.begin();
-		// debugRenderer.render(world, debugMatrix);
+		//
+		debugRenderer.render(world, debugMatrix);
+		//
 		batch.end();
 
 		soundManager.draw(shapeRenderer);

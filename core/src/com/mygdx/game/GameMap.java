@@ -3,6 +3,7 @@ package com.mygdx.game;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
@@ -42,8 +43,15 @@ public class GameMap implements Json.Serializable{
 			Vector2 position = new Vector2();
 			position.x = instance.get("position").getInt(0);
 			position.y = instance.get("position").getInt(1);
+			float scale = instance.getFloat("scale");
+			float angle = instance.getFloat("angle");
+			vertices = vertices.stream()
+					.map(v -> v.scl(scale))
+					.map(v -> v.rotate(angle))
+					.collect(Collectors.toList());
 			Rock rock = new Rock(world, vertices.toArray(new Vector2[vertices.size()]), position);
 			map.objects.add(rock);
+
 		}
 		/*map.objects.add(new Rock( world,
 				new Vector2[] {
