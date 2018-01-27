@@ -5,11 +5,13 @@ import com.badlogic.gdx.Game;
 public class MyGdxGame extends Game {
 
 	PlayScreen playScreen;
-	
+	MenuScreen menuScreen;
+
 	@Override
 	public void create() {
-		playScreen=new PlayScreen("path");
-		setScreen(playScreen);
+		playScreen = new PlayScreen("path");
+		menuScreen = new MenuScreen(this);
+		setScreen(menuScreen);
 	}
 
 	@Override
