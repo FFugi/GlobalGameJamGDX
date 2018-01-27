@@ -100,9 +100,10 @@ public class MenuScreen implements Screen {
 			if(menuPosition==1) {
 				game.setScreen(game.playScreen);
 			}
+			else if(menuPosition==0) {
+				game.dispose();
+			}
 		}
-		
-		
 		if(menuPosition<0) {
 			menuPosition=1;
 		}
@@ -138,7 +139,9 @@ public class MenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
+		batch.dispose();
 		myFont.dispose();
+		
 	}
 
 }
