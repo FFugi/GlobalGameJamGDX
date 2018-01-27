@@ -8,8 +8,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Rock {
-	private Body body;
+    private Vector2[] vertices;
+    private Body body;
 	
 	public Body getBody() {
 		return body;
@@ -21,6 +26,7 @@ public class Rock {
 		bodyDef.type = BodyDef.BodyType.StaticBody;
 		bodyDef.position.set(position.x, position.y);
 
+		this.vertices = vertices.clone();
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
         
@@ -32,11 +38,17 @@ public class Rock {
 		this.body = world.createBody(bodyDef);
 		 
 		Fixture fixture = this.body.createFixture(fixtureDef);
-		
+
 		shape.dispose();
 	}
 	
 	public void SetPosition(int x, int y) {
 		body.setTransform(x, y, body.getAngle());
 	}
+
+	public List<Vector2> getVertices() {
+	    return Arrays.stream(vertices)
+                .map(v -> v.add(body.getPosition()))
+                .collect(Collectors.toList());
+    }
 }

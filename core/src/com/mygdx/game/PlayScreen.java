@@ -101,12 +101,15 @@ public class PlayScreen implements Screen {
 		soundManager.draw(shapeRenderer);
 		
 		
-		 List<Rock> objects=map.getObjects();
-		 float x= objects.get(1).getBody().getPosition().x;
-		 float y= objects.get(1).getBody().getPosition().y;
-		 shapeRenderer.begin(ShapeType.Line);
-		 shapeRenderer.rect(x, y, 1, 1);
-		shapeRenderer.end();
+		List<Rock> objects=map.getObjects();
+        for (Rock object : objects) {
+            for (Vector2 pos : object.getVertices()) {
+               shapeRenderer.begin(ShapeType.Line);
+               shapeRenderer.rect(pos.x, pos.y, 5, 5);
+               shapeRenderer.end();
+            }
+        }
+
 
 	}
 
