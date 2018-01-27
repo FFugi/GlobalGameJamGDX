@@ -23,7 +23,7 @@ public class Gate extends Rock {
             vcs[i * 2] = verts.get(i).x;
             vcs[i * 2 + 1] = verts.get(i).y;
         }
-
+        body.setUserData(this);
         enabled = true;
     }
 

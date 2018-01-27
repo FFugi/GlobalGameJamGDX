@@ -37,6 +37,7 @@ public class Rock {
 		fixtureDef.filter.categoryBits = 1;
 
 		this.body = world.createBody(bodyDef);
+		body.setUserData(this);
 		 
 		Fixture fixture = this.body.createFixture(fixtureDef);
 
