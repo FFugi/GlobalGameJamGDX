@@ -16,7 +16,7 @@ public class ParticleManager {
 	public ParticleManager(World world) {
 		this.world = world;
 		particlepools = new ArrayList<ParticlePool>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 3; i++) {
 			particlepools.add(new ParticlePool(world));
 		}
 	}

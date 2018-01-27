@@ -28,12 +28,12 @@ public class Gate extends Rock {
     }
 
     public void Draw(ShapeRenderer renderer) {
-        if (enabled) {
+      /*  if (enabled) {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(1, 0, 0, 1);
             renderer.polygon(vcs);
             renderer.end();
-        }
+        }*/
     }
 
     public void disable() {

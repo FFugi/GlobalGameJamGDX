@@ -1,10 +1,8 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -186,12 +184,13 @@ public class PlayScreen implements Screen {
 		player.setVelocity(horizontalInput, verticalInput);
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			int x = Gdx.input.getX();
+		/*	int x = Gdx.input.getX();
 			int y = Gdx.input.getY();
 			Vector3 v3 = camera.unproject(new Vector3(x, y, 0));
 			Vector2 position = new Vector2();
 			position.x = v3.x;
-			position.y = v3.y;
+			position.y = v3.y;*/
+			Vector2 position = player.getPosition();
 			particleManager.RequestBurst(position);
 		}
 	}
@@ -206,15 +205,20 @@ public class PlayScreen implements Screen {
 				if (fixtureB.getBody().getUserData() instanceof SoundParticle
 						&& fixtureA.getBody().getUserData() instanceof Rock) {
 					if (fixtureA.getBody().getUserData() instanceof Gate) {
-						Vector2 vector = fixtureB.getBody().getLinearVelocity();
-						fixtureB.getBody().setLinearVelocity(vector.scl(0.3f));
-					} else {
-						fixtureB.getBody().setLinearVelocity(0, 0);
+						SoundParticle particle=(SoundParticle) fixtureB.getBody().getUserData();
+						particle.isOnDoor=true;
 					}
+					fixtureB.getBody().setLinearVelocity(0, 0);
+
 				}
 				if (fixtureA.getBody().getUserData() instanceof SoundParticle
 						&& (fixtureB.getBody().getUserData() instanceof Rock)) {
+					if (fixtureB.getBody().getUserData() instanceof Gate) {
+						SoundParticle particle=(SoundParticle) fixtureA.getBody().getUserData();
+						particle.isOnDoor=true;
+					}
 					fixtureA.getBody().setLinearVelocity(0, 0);
+
 				}
 			}
 

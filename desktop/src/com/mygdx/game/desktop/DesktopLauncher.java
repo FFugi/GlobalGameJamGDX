@@ -10,5 +10,6 @@ public class DesktopLauncher {
 		new LwjglApplication(new MyGdxGame(), config);
 		config.width = 800;
 		config.height = 600;
+		config.title = "ECHO v.1";
 	}
 }

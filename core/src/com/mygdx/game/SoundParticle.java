@@ -12,11 +12,11 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Timer;
 
 public class SoundParticle extends GameObject {
-	float x, y;
-	Vector2 startPos;
-	Body body;
-
-	float scaleSize = 1;
+	public float x, y;
+	public Vector2 startPos;
+	public Body body;
+	public boolean isOnDoor;
+	public float scaleSize = 1;
 
 	public SoundParticle(Vector2 position, Vector2 velocity, World world) {
 		BodyDef bodyDef = new BodyDef();
@@ -34,6 +34,7 @@ public class SoundParticle extends GameObject {
 		startPos = new Vector2();
 		startPos.x = position.x;
 		startPos.y = position.y;
+		isOnDoor=false;
 	}
 
 	@Override
@@ -50,7 +51,13 @@ public class SoundParticle extends GameObject {
 			radius = 3;
 		}
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(0f, 1f-progress, 0f, 0f);
+		if(isOnDoor) {
+			shapeRenderer.setColor(1f-progress, 0f, 0f, 0f);
+		}
+		else {
+			shapeRenderer.setColor(0f, 1f-progress, 0f, 0f);
+		}
+		
 		shapeRenderer.circle(body.getPosition().x, body.getPosition().y, radius);
 		shapeRenderer.end();
 	}
