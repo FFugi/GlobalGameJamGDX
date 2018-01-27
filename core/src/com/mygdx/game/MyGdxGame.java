@@ -1,5 +1,8 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,10 +22,16 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class MyGdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -34,6 +43,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private World world;
 
 	private Player player;
+	private List<SoundParticle> particles;
 
 	private GameMap map;
 
@@ -42,6 +52,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private float deltaTime;
 	// ShapeRenderer shapeRenderer;
+	private ShapeRenderer shapeRenderer;
 
 	@Override
 	public void create() {
@@ -62,9 +73,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		debugMatrix.translate(-Gdx.graphics.getWidth() / 2, -Gdx.graphics.getHeight() / 2, 0);
 
 		debugRenderer = new Box2DDebugRenderer();
-		map= new GameMap(world);
+		map = new GameMap(world);
 		map.LoadFromFile(world, "filename");
 
+		particles = new ArrayList<SoundParticle>();
+		shapeRenderer = new ShapeRenderer();
+
+		SetCollisionListener();
 	}
 
 	@Override
@@ -72,7 +87,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		deltaTime = Gdx.graphics.getDeltaTime();
 		HandleInput();
 
-		world.step(deltaTime, 6, 2);
+		world.step(1f / 60f, 6, 2);
 
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
@@ -81,9 +96,22 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.Draw(batch);
 
 		batch.begin();
-		// BoxObjectManager.GetWorld() gets the reference to Box2d World object
-		//debugRenderer.render(world, debugMatrix);
+		// debugRenderer.render(world, debugMatrix);
 		batch.end();
+
+		for (SoundParticle particle : particles) {
+			particle.Draw(shapeRenderer);
+			if (particle.GetLifeTime() > 5) {
+				particle.DestroyBody();
+				System.out.println("destroyed");
+			}
+		}
+		for (int i = 0; i < particles.size(); i++) {
+			if (particles.get(i).body == null) {
+				particles.remove(i);
+				i--;
+			}
+		}
 
 	}
 
@@ -114,8 +142,40 @@ public class MyGdxGame extends ApplicationAdapter {
 			Vector3 v3 = camera.unproject(new Vector3(x, y, 0));
 			Vector2 position = new Vector2();
 			position.x = v3.x;
-            position.y = v3.y;
-			SoundParticle.emit(position, 500, 1000, world);
+			position.y = v3.y;
+			SoundParticle.emit(position, 500, 1000, world, particles);
 		}
+	}
+
+	public void SetCollisionListener() {
+		world.setContactListener(new ContactListener() {
+
+			@Override
+			public void beginContact(Contact contact) {
+				Fixture fixtureA = contact.getFixtureA();
+				Fixture fixtureB = contact.getFixtureB();
+				if (fixtureB.getBody().getUserData() instanceof SoundParticle) {
+					fixtureB.getBody().setLinearVelocity(0, 0);
+				}
+				if (fixtureA.getBody().getUserData() instanceof SoundParticle) {
+					fixtureA.getBody().setLinearVelocity(0, 0);
+				}
+			}
+
+			@Override
+			public void endContact(Contact contact) {
+				Fixture fixtureA = contact.getFixtureA();
+				Fixture fixtureB = contact.getFixtureB();
+			}
+
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) {
+			}
+
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) {
+			}
+
+		});
 	}
 }
