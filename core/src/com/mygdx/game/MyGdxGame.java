@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -30,6 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Box2d World
 	World world;
 
+	Body testBody;
 	
 	Player player;
 
@@ -45,8 +47,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		playerSprite = new Sprite(img);
-		
-	
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -60,6 +60,30 @@ public class MyGdxGame extends ApplicationAdapter {
 		debugMatrix.translate(-Gdx.graphics.getWidth()/2, -Gdx.graphics.getHeight()/2, 0);
 
 		debugRenderer = new Box2DDebugRenderer();
+		
+		
+		
+		// TEST
+		
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+		bodyDef.position.set(100,200);
+		
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(100, 100);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 1f;
+		
+		testBody = world.createBody(bodyDef);
+		 
+		Fixture fixture = testBody.createFixture(fixtureDef);
+		
+		shape.dispose();
+		
+		
+		
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class Player extends GameObject {
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(this.sprite.getX(), this.sprite.getY());
-
+		bodyDef.fixedRotation=true;
 		
 		CircleShape  shape = new CircleShape ();
 		shape.setRadius(sprite.getHeight()/2);
