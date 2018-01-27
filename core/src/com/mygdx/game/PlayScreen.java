@@ -104,9 +104,17 @@ public class PlayScreen implements Screen {
 		List<Rock> objects=map.getObjects();
         for (Rock object : objects) {
             for (Vector2 pos : object.getVertices()) {
-               shapeRenderer.begin(ShapeType.Line);
-               shapeRenderer.rect(pos.x, pos.y, 5, 5);
+               shapeRenderer.begin(ShapeType.Filled);
+               shapeRenderer.setColor(1, 0, 0, 1);
+               shapeRenderer.circle(pos.x, pos.y, 3);
                shapeRenderer.end();
+            }
+
+            for (Vector2 center : object.getCenters()) {
+                shapeRenderer.begin(ShapeType.Filled);
+                shapeRenderer.setColor(0, 0, 1, 1);
+                shapeRenderer.circle(center.x, center.y, 3);
+                shapeRenderer.end();
             }
         }
 
