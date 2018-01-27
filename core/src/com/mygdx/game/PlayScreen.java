@@ -169,11 +169,13 @@ public class PlayScreen implements Screen {
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			int x = Gdx.input.getX();
 			int y = Gdx.input.getY();
+			float maxAge = 2f;
+			float radius = 50f;
 			Vector3 v3 = camera.unproject(new Vector3(x, y, 0));
 			Vector2 position = new Vector2();
 			position.x = v3.x;
 			position.y = v3.y;
-			soundManager.addEmitter(new SoundEmitter(position, world));
+			soundManager.addEmitter(new SoundEmitter(position, world, maxAge, radius));
 		}
 	}
 
