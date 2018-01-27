@@ -29,12 +29,18 @@ public class MenuScreen implements Screen {
 
 	private MyGdxGame game;
 	
+	private float logoTimer;
+	private final static float logoAnimationTime=2;
+	
 	public MenuScreen(MyGdxGame game) {
+		
 		this.game=game;
 		shapeRenderer = new ShapeRenderer();
 
 		batch = new SpriteBatch();
 
+		menuPosition=1;
+		
 		ConfigureFont();
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -68,6 +74,9 @@ public class MenuScreen implements Screen {
 		HandleInput();
 
 		DrawFrame();
+		
+		DrawLogo();
+		
 		batch.begin();
 
 		String[] menuOptions;
@@ -80,6 +89,18 @@ public class MenuScreen implements Screen {
 			}
 			myFont.draw(batch, option, SCREENWIDTH / 2 - fontsize * option.length() / 3, SCREENHEIGHT / 2 + fontsize *i++ *3);
 		}
+		batch.end();
+	}
+
+	private void DrawLogo() {
+		
+		myFont.setColor(0f,1f,0f,1f);
+		logoTimer+=Gdx.graphics.getDeltaTime();
+		if(logoTimer>logoAnimationTime) {
+		
+		}
+		batch.begin();
+		myFont.draw(batch, "ECHO", SCREENWIDTH / 2 - fontsize * "ECHO".length() / 3, SCREENHEIGHT / 1.1f);
 		batch.end();
 	}
 
