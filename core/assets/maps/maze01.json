@@ -24,7 +24,9 @@
     [1060,550]
   ],
   "instances":[
-    {"name": "horizontalBorder", "position":[20,0]},
+    {"name": "horizontalBorder", "position":[20,0], "scale":[0.45,1.0]},
+    {"name": "horizontalBorder", "position":[880,0], "scale":[0.5,1.0]},
+    //pomiędzy ^ nimi jest dziura
     {"name": "verticalBorder", "position":[0,0]},
     {"name": "horizontalBorder", "position":[20,600]},
     {"name": "verticalBorder", "position":[1600,0]},
