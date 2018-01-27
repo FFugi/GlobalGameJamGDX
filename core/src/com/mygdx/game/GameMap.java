@@ -3,6 +3,7 @@ package com.mygdx.game;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
-public class GameMap implements Json.Serializable{
+public class GameMap {
 
 	private World world;
 	private List<Rock> objects;
@@ -43,60 +44,22 @@ public class GameMap implements Json.Serializable{
 			Vector2 position = new Vector2();
 			position.x = instance.get("position").getInt(0);
 			position.y = instance.get("position").getInt(1);
+			float scale = instance.getFloat("scale");
+			float angle = instance.getFloat("angle");
+			vertices = vertices.stream()
+					.map(v -> v.scl(scale))
+					.map(v -> v.rotate(angle))
+					.collect(Collectors.toList());
 			Rock rock = new Rock(world, vertices.toArray(new Vector2[vertices.size()]), position);
 			map.objects.add(rock);
+
 		}
-		/*map.objects.add(new Rock( world,
-				new Vector2[] {
-				new Vector2(8f  , 0f),
-				new Vector2(13f , 40f  ),
-				new Vector2(200f , 140f  ),
-		}));
-		
-		map.objects.get(0).SetPosition(20, 100);
-		
-		map.objects.add(new Rock( world,
-				new Vector2[] {
-				new Vector2(30f  , 90f),
-				new Vector2(43f , 45f  ),
-				new Vector2(200f , 10f  ),
-		}));
-		
-		map.objects.get(1).SetPosition(400, 160);
-		
-		map.objects.add(new Rock( world,
-				new Vector2[] {
-				new Vector2(43f  , 70f),
-				new Vector2(10 , 80f  ),
-				new Vector2(25f , 30f  ),
-		}));
-		
-		map.objects.get(2).SetPosition(200, 50);
-		
-		map.objects.add(new Rock( world,
-				new Vector2[] {
-				new Vector2(0  , 100),
-				new Vector2(100 , 100  ),
-				new Vector2(100 , 0  ),
-		}));
-		
-		map.objects.get(2).SetPosition(500, 350);
-		*/
 		return map;
 	}
 
-
-	@java.lang.Override
-	public void write(Json json) {
-
-	}
-
-	@java.lang.Override
-	public void read(Json json, JsonValue jsonData) {
-
-	}
 	
 	public List<Rock> getObjects() {
 		return objects;
 	}
+
 }

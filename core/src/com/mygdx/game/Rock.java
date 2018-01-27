@@ -20,7 +20,7 @@ public class Rock {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.StaticBody;
 		bodyDef.position.set(position.x, position.y);
-	
+
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
         
