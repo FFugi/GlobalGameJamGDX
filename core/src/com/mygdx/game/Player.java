@@ -18,7 +18,7 @@ public class Player extends GameObject {
 	private float speed;
 
 	public Player(Sprite sprite,World world) {
-		speed = 500;
+		speed = 100;
 		this.sprite=sprite; 
 		 
 		bodyDef = new BodyDef();
@@ -27,6 +27,7 @@ public class Player extends GameObject {
 		bodyDef.fixedRotation=true;
 		bodyDef.linearDamping=0;
 		
+		
 		CircleShape  shape = new CircleShape ();
 		shape.setRadius(sprite.getHeight()/2);
 
@@ -34,6 +35,7 @@ public class Player extends GameObject {
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
 		fixtureDef.friction=0;
+		fixtureDef.filter.categoryBits = 4;
 		
 		body = world.createBody(bodyDef);
 		 
@@ -56,7 +58,7 @@ public class Player extends GameObject {
 
 	public void setVelocity(float horizontalInput, float verticalInput) {
 		// TODO Auto-generated method stub
-		body.setLinearVelocity(speed , speed );
+		body.setLinearVelocity(speed*horizontalInput , speed*verticalInput );
 	}
 	
 	public Vector2 getPosition() {
