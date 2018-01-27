@@ -44,10 +44,17 @@ public class GameMap {
 			Vector2 position = new Vector2();
 			position.x = instance.get("position").getInt(0);
 			position.y = instance.get("position").getInt(1);
-			float scale = instance.getFloat("scale");
-			float angle = instance.getFloat("angle");
+			Vector2 scale;
+			JsonValue jsonScale = instance.get("scale");
+			if (jsonScale == null) {
+				scale = new Vector2(1, 1);
+			} else {
+				scale = new Vector2(jsonScale.getFloat(0), jsonScale.getFloat(1));
+			}
+			float angle = instance.getFloat("angle", 0);
+			instance.get("scale");
 			vertices = vertices.stream()
-					.map(v -> v.scl(scale))
+					.map(v -> new Vector2(scale.x*v.x, scale.y*v.y))
 					.map(v -> v.rotate(angle))
 					.collect(Collectors.toList());
 			Rock rock = new Rock(world, vertices.toArray(new Vector2[vertices.size()]), position);
