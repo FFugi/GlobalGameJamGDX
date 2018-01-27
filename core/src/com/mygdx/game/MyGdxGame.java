@@ -96,7 +96,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.Draw(batch);
 
 		batch.begin();
-		// debugRenderer.render(world, debugMatrix);
+		debugRenderer.render(world, debugMatrix);
 		batch.end();
 
 		for (SoundParticle particle : particles) {

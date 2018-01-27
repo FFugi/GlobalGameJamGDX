@@ -11,11 +11,11 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Rock {
 	private Body body;
 	
-	Rock(World world, Vector2[] vertices){
+	Rock(World world, Vector2[] vertices, Vector2 position){
 		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.StaticBody;
-		bodyDef.position.set(200,300);
+		bodyDef.position.set(position.x, position.y);
 	
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
