@@ -89,24 +89,43 @@ public class PlayScreen implements Screen {
 		deltaTime = Gdx.graphics.getDeltaTime();
 		HandleInput();
 
-		world.step(1 / 30f, 6, 6);
+
+		world.step(1/30f, 6, 2);
+
 		SetCamera();
 
 		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+        soundManager.draw(shapeRenderer);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        map.collectibles.forEach(c -> c.Draw(shapeRenderer));
+        map.gates.forEach(c -> c.Draw(shapeRenderer));
+        map.updateGates();
+
+
 		player.Draw(batch);
 
-		batch.begin();
+
+	
+
 
 		debugRenderer.render(world, debugMatrix);
-
-		batch.end();
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		particleManager.DisplayParticles(shapeRenderer);
+		
+		
+		// For debug purpose
+		batch.begin();
+
+		batch.end();
+
+		map.captureCollectibles(player);
 
 	}
 
