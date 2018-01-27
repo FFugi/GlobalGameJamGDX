@@ -24,17 +24,16 @@ public class Collectible {
 		if (blinkTimer > lightenTime + disappearTime)
 			blinkTimer = 0;
 		Gdx.gl.glEnable(GL30.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
 		renderer.begin(ShapeRenderer.ShapeType.Filled);
 		if (blinkTimer <= lightenTime) {
 			float progress = blinkTimer / lightenTime;
-			renderer.setColor(progress, 0, 0, 0);
+			renderer.setColor(0.7f, 0.1f, 0f, progress);
 		} else {
 			float progress = (blinkTimer - lightenTime) / disappearTime;
-			renderer.setColor(1-progress, 0, 0, 0);
+			renderer.setColor(0.7f, 0.1f, 0f, 1-progress);
 		}
-		Gdx.gl.glDisable(GL30.GL_BLEND);
 		renderer.circle(position.x, position.y, radius);
 		renderer.end();
+		Gdx.gl.glDisable(GL30.GL_BLEND);
 	}
 }

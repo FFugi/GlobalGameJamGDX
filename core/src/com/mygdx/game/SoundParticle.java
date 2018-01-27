@@ -1,15 +1,17 @@
 package com.mygdx.game;
 
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class SoundParticle extends GameObject {
 	public float x, y;
@@ -42,7 +44,7 @@ public class SoundParticle extends GameObject {
 		System.out.println("drawing");
 	}
 
-	public void Draw(ShapeRenderer shapeRenderer, float progress) {
+	public void Draw(ShapeRenderer shapeRenderer, float progress, Color color) {
 		float radius = 0;
 		if (body.getLinearVelocity().x == 0 && body.getLinearVelocity().y == 0) {
 			radius = 3+ scaleSize;
@@ -50,16 +52,18 @@ public class SoundParticle extends GameObject {
 		} else {
 			radius = 3;
 		}
+		Gdx.gl.glEnable(GL30.GL_BLEND);
 		shapeRenderer.begin(ShapeType.Filled);
+		
 		if(isOnDoor) {
-			shapeRenderer.setColor(1f-progress, 0f, 0f, 0f);
+			shapeRenderer.setColor(1f, 0f, 0f, 1f-progress);
 		}
 		else {
-			shapeRenderer.setColor(0f, 1f-progress, 0f, 0f);
+			shapeRenderer.setColor(color.r,color.g, color.b, 1f-progress);
 		}
-		
 		shapeRenderer.circle(body.getPosition().x, body.getPosition().y, radius);
 		shapeRenderer.end();
+		Gdx.gl.glDisable(GL30.GL_BLEND);
 	}
 
 

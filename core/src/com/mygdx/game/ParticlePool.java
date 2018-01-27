@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -18,7 +19,8 @@ public class ParticlePool {
 	private final static float animationTime=4;
 	float lifeTime;
 	public long timeWhenActivated;
-
+	public Color color;
+	
 	public ParticlePool(World world) {
 		this.world = world;
 		particles = new ArrayList<SoundParticle>();
@@ -33,7 +35,7 @@ public class ParticlePool {
 			lifeTime += Gdx.graphics.getDeltaTime();
 			// System.out.println(String.valueOf(lifeTime ));
 			for (SoundParticle particle : particles) {
-				particle.Draw(shapeRenderer ,lifeTime/animationTime);
+				particle.Draw(shapeRenderer ,lifeTime/animationTime, color);
 			}
 			if (lifeTime > animationTime) {
 				setAvailable(true);
@@ -47,7 +49,8 @@ public class ParticlePool {
 		}
 	}
 
-	public void Burst(Vector2 position) {
+	public void Burst(Vector2 position, Color color) {
+		this.color=color;
 		setAvailable(false);
 		int i = 0;
 		for (SoundParticle particle : particles) {
