@@ -15,12 +15,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class MenuScreen implements Screen {
 
-	BitmapFont myFont;
+	BitmapFont optionsFont;
+	BitmapFont logoFont;
 	SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 
-	private static final int fontsize = 20;
+	private static final int optionsFontSize = 40;
+	private static final int logoFontSize = 70;
+	
 
 	private int menuPosition;
 
@@ -28,19 +31,19 @@ public class MenuScreen implements Screen {
 	private int SCREENHEIGHT;
 
 	private MyGdxGame game;
-	
+
 	private float logoTimer;
-	private final static float logoAnimationTime=2;
-	
+	private final static float logoAnimationTime = 5;
+
 	public MenuScreen(MyGdxGame game) {
-		
-		this.game=game;
+
+		this.game = game;
 		shapeRenderer = new ShapeRenderer();
 
 		batch = new SpriteBatch();
 
-		menuPosition=1;
-		
+		menuPosition = 1;
+
 		ConfigureFont();
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -52,13 +55,16 @@ public class MenuScreen implements Screen {
 	}
 
 	private void ConfigureFont() {
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/PTM55FT.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Supply-Bold.otf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = fontsize;
-		parameter.borderWidth=4f;
-		parameter.borderColor=Color.BLACK;
-		myFont = generator.generateFont(parameter);
-		myFont.setColor(Color.GREEN);
+		parameter.size = optionsFontSize;
+		parameter.borderWidth = 1.0f;
+		parameter.borderColor = Color.BLACK;
+		optionsFont = generator.generateFont(parameter);
+		optionsFont.setColor(Color.GREEN);
+		parameter.size = logoFontSize;
+		logoFont = generator.generateFont(parameter);
+		parameter.size = optionsFontSize;
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!
 
 	}
@@ -72,42 +78,48 @@ public class MenuScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		HandleInput();
-
 		DrawFrame();
-		
 		DrawLogo();
-		
-		batch.begin();
+		DrawOptions();
+	}
 
+	private void DrawOptions() {
 		String[] menuOptions;
-		menuOptions = new String[] { new String("Exit!"), new String("Start Game!") };
-		int i =0;
-		for(String option:menuOptions) {
-			myFont.setColor(Color.GREEN);
-			if(menuPosition==i) {
-				myFont.setColor(Color.YELLOW);
+		menuOptions = new String[] { new String("Exit"), new String("Start Game") };
+		int i = 0;
+		batch.begin();
+		for (String option : menuOptions) {
+			optionsFont.setColor(0f, 1f, 0.5f, 1f);
+			if (menuPosition == i) {
+				optionsFont.setColor(Color.GOLD);
 			}
-			myFont.draw(batch, option, SCREENWIDTH / 2 - fontsize * option.length() / 3, SCREENHEIGHT / 2 + fontsize *i++ *3);
+			optionsFont.draw(batch, option, SCREENWIDTH / 2 - optionsFontSize * option.length() / 3,
+					SCREENHEIGHT / 2.5f+ optionsFontSize * i++ * 3);
 		}
 		batch.end();
 	}
 
 	private void DrawLogo() {
-		
-		myFont.setColor(0f,1f,0f,1f);
-		logoTimer+=Gdx.graphics.getDeltaTime();
-		if(logoTimer>logoAnimationTime) {
-		
+		float green = 0;
+		if (logoTimer < logoAnimationTime / 2) {
+			green = logoTimer / (logoAnimationTime / 2);
+		} else {
+			green = 1  - (logoTimer - (logoAnimationTime / 2)) / (logoAnimationTime / 2);
+		}
+		logoFont.setColor(0.1f, green, 0.3f, 1f);
+		logoTimer += Gdx.graphics.getDeltaTime();
+		if (logoTimer > logoAnimationTime) {
+			logoTimer = 0;
 		}
 		batch.begin();
-		myFont.draw(batch, "ECHO", SCREENWIDTH / 2 - fontsize * "ECHO".length() / 3, SCREENHEIGHT / 1.1f);
+		logoFont.draw(batch, "ECHO", SCREENWIDTH / 2 - logoFontSize * "ECHO".length() / 3, SCREENHEIGHT / 1.1f);
 		batch.end();
 	}
 
 	private void DrawFrame() {
 		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(0, 1, 0, 1);
-		shapeRenderer.rect(SCREENWIDTH / 4, SCREENHEIGHT / 4, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+		shapeRenderer.setColor(0, 0.5f, 0.5f, 1);
+		//shapeRenderer.rect(SCREENWIDTH / 4, SCREENHEIGHT / 4, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 		shapeRenderer.end();
 	}
 
@@ -116,20 +128,17 @@ public class MenuScreen implements Screen {
 			menuPosition--;
 		} else if (Gdx.input.isKeyJustPressed(Keys.DOWN)) {
 			menuPosition++;
-		}
-		else if(Gdx.input.isKeyJustPressed(Keys.ENTER)) {
-			if(menuPosition==1) {
+		} else if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+			if (menuPosition == 1) {
 				game.setScreen(game.playScreen);
-			}
-			else if(menuPosition==0) {
+			} else if (menuPosition == 0) {
 				game.dispose();
 			}
 		}
-		if(menuPosition<0) {
-			menuPosition=1;
-		}
-		else if(menuPosition>1) {
-			menuPosition=0;
+		if (menuPosition < 0) {
+			menuPosition = 1;
+		} else if (menuPosition > 1) {
+			menuPosition = 0;
 		}
 	}
 
@@ -161,8 +170,9 @@ public class MenuScreen implements Screen {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		batch.dispose();
-		myFont.dispose();
-		
+		optionsFont.dispose();
+		logoFont.dispose();
+		shapeRenderer.dispose();
 	}
 
 }

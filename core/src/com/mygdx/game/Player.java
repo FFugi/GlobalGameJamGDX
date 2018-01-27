@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -15,19 +16,17 @@ public class Player extends GameObject {
 	private Sprite sprite;
 	private BodyDef bodyDef;
 	private float speed;
-	private float verticalVelocity;
-
-	private float horizontalVelocity;
-
 
 	public Player(Sprite sprite,World world) {
 		speed = 100;
 		this.sprite=sprite; 
-		
+		 
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(this.sprite.getX(), this.sprite.getY());
+		bodyDef.position.set(100, 100);
 		bodyDef.fixedRotation=true;
+		bodyDef.linearDamping=0;
+		
 		
 		CircleShape  shape = new CircleShape ();
 		shape.setRadius(sprite.getHeight()/2);
@@ -35,6 +34,8 @@ public class Player extends GameObject {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
+		fixtureDef.friction=0;
+		fixtureDef.filter.categoryBits = 4;
 		
 		body = world.createBody(bodyDef);
 		 
@@ -42,6 +43,8 @@ public class Player extends GameObject {
 		
 		sprite.setCenter(sprite.getWidth()/2, sprite.getHeight()/2);
 		shape.dispose();
+		
+		
 	}
 
 	@Override
@@ -55,7 +58,10 @@ public class Player extends GameObject {
 
 	public void setVelocity(float horizontalInput, float verticalInput) {
 		// TODO Auto-generated method stub
-		body.setLinearVelocity(speed * horizontalInput, speed * verticalInput);
+		body.setLinearVelocity(speed*horizontalInput , speed*verticalInput );
 	}
 	
+	public Vector2 getPosition() {
+		return new Vector2(body.getPosition());
+	}
 }
