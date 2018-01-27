@@ -23,28 +23,27 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class MyGdxGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	Sprite playerSprite;
-	OrthographicCamera camera;
+	private SpriteBatch batch;
+	private Texture img;
+	private Sprite playerSprite;
+	private OrthographicCamera camera;
 
 	// Box2d World
-	World world;
-	
-	Player player;
+	private World world;
 
-	Rock square;
-	
-	Box2DDebugRenderer debugRenderer;
-	Matrix4 debugMatrix;
+	private Player player;
 
-	
-	float deltaTime;
-	//ShapeRenderer shapeRenderer;
+	private GameMap map;
+
+	private Box2DDebugRenderer debugRenderer;
+	private Matrix4 debugMatrix;
+
+	private float deltaTime;
+	// ShapeRenderer shapeRenderer;
 
 	@Override
 	public void create() {
-		//shapeRenderer=new ShapeRenderer();
+		// shapeRenderer=new ShapeRenderer();
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		playerSprite = new Sprite(img);
@@ -58,11 +57,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		player = new Player(playerSprite, world);
 
 		debugMatrix = new Matrix4(camera.combined);
-		debugMatrix.translate(-Gdx.graphics.getWidth()/2, -Gdx.graphics.getHeight()/2, 0);
+		debugMatrix.translate(-Gdx.graphics.getWidth() / 2, -Gdx.graphics.getHeight() / 2, 0);
 
 		debugRenderer = new Box2DDebugRenderer();
-		square=new Rock(world);
-		
+		map= new GameMap(world);
+		map.LoadFromFile(world, "filename");
+
 	}
 
 	@Override
@@ -82,8 +82,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// BoxObjectManager.GetWorld() gets the reference to Box2d World object
 		debugRenderer.render(world, debugMatrix);
 		batch.end();
-			
-		
+
 	}
 
 	@Override

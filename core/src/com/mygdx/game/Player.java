@@ -14,13 +14,13 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player extends GameObject {
 
-	Body body;
-	Sprite sprite;
-	BodyDef bodyDef;
-	float speed;
-	float verticalVelocity;
+	private Body body;
+	private Sprite sprite;
+	private BodyDef bodyDef;
+	private float speed;
+	private float verticalVelocity;
 
-	float horizontalVelocity;
+	private float horizontalVelocity;
 
 
 	public Player(Sprite sprite,World world) {
