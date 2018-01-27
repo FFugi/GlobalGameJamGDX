@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.File;
 import java.util.stream.Collectors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -25,7 +26,7 @@ public class GameMap implements Json.Serializable{
 	static GameMap LoadFromFile(World world, String filename) {
 		GameMap map = new GameMap(world);
 
-		JsonValue jsonData = new JsonReader().parse(new FileHandle("maps/mapobjects.json"));
+		JsonValue jsonData = new JsonReader().parse(Gdx.files.internal("maps/mapobjects.json"));
 		JsonValue jsonObjects = jsonData.get("objects");
 		JsonValue instances = jsonData.get("instances");
 		JsonValue.JsonIterator instanceIterator = instances.iterator();
