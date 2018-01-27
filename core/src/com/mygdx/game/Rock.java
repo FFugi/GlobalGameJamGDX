@@ -48,7 +48,7 @@ public class Rock {
 
 	public List<Vector2> getVertices() {
 	    return Arrays.stream(vertices)
-                .map(v -> v.add(body.getPosition()))
+                .map(v -> new Vector2(v).add(body.getPosition()))
                 .collect(Collectors.toList());
     }
 }
