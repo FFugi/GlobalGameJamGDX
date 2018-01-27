@@ -55,12 +55,13 @@ public class PlayScreen implements Screen {
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 
-		// Box2d experiments
+		// Box2d experiments 
 		world = new World(new Vector2(0, 0), true);
+		world.setContinuousPhysics(true);
 
 		player = new Player(playerSprite, world);
 
-		debugMatrix = new Matrix4(camera.combined);
+		debugMatrix = batch.getProjectionMatrix();
 		debugMatrix.translate(-Gdx.graphics.getWidth() / 2, -Gdx.graphics.getHeight() / 2, 0);
 
 		debugRenderer = new Box2DDebugRenderer();
@@ -84,9 +85,9 @@ public class PlayScreen implements Screen {
 		deltaTime = Gdx.graphics.getDeltaTime();
 		HandleInput();
 
-		world.step(1f / 60f, 6, 2);
+		world.step(delta, 6, 2);
+		SetCamera();
 
-		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -94,30 +95,29 @@ public class PlayScreen implements Screen {
 
 		batch.begin();
 
+		
 		debugRenderer.render(world, debugMatrix);
 
 		batch.end();
 
 		soundManager.draw(shapeRenderer);
-		
-		
-		List<Rock> objects=map.getObjects();
-        for (Rock object : objects) {
-            for (Vector2 pos : object.getVertices()) {
-               shapeRenderer.begin(ShapeType.Filled);
-               shapeRenderer.setColor(1, 0, 0, 1);
-               shapeRenderer.circle(pos.x, pos.y, 3);
-               shapeRenderer.end();
-            }
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		List<Rock> objects = map.getObjects();
+		for (Rock object : objects) {
+			for (Vector2 pos : object.getVertices()) {
+				shapeRenderer.begin(ShapeType.Filled);
+				shapeRenderer.setColor(1, 0, 0, 1);
+				shapeRenderer.circle(pos.x, pos.y, 3);
+				shapeRenderer.end();
+			}
 
-            for (Vector2 center : object.getCenters()) {
-                shapeRenderer.begin(ShapeType.Filled);
-                shapeRenderer.setColor(0, 0, 1, 1);
-                shapeRenderer.circle(center.x, center.y, 3);
-                shapeRenderer.end();
-            }
-        }
-
+			for (Vector2 center : object.getCenters()) {
+				shapeRenderer.begin(ShapeType.Filled);
+				shapeRenderer.setColor(0, 0, 1, 1);
+				shapeRenderer.circle(center.x, center.y, 3);
+				shapeRenderer.end();
+			}
+		}
 
 	}
 
@@ -202,5 +202,13 @@ public class PlayScreen implements Screen {
 			}
 
 		});
+	}
+
+	public void SetCamera() {
+		
+		camera.position.x = player.getPosition().x;
+		camera.position.y =player.getPosition().y;
+		camera.update();
+
 	}
 }

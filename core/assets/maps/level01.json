@@ -1,0 +1,20 @@
+
+{
+  "objects": {
+    "horizontalBorder": [[0,0], [3000,0], [3000, 20], [0,20]],
+    "verticalBorder": [[0,0], [0,600], [20, 600], [20,0]],
+    "OstacleRect01": [[0,0], [300,0], [300, 200], [0,200]],
+    "OstacleTri01": [[0,0], [0,200], [200, 400]],
+    "OstacleTri02": [[100,300], [300,300], [0, 0]],
+    
+  },
+  "instances":[
+    {"name": "horizontalBorder", "position":[20,0], "angle":0.0, "scale":1.0},
+    {"name": "verticalBorder", "position":[0,0], "angle":0.0, "scale":1.0},
+    {"name": "horizontalBorder", "position":[0,600], "angle":0.0, "scale":1.0},
+    {"name": "OstacleRect01", "position":[300,20], "angle":0.0, "scale":1.0},
+    {"name": "OstacleRect01", "position":[350,300], "angle":45.0, "scale":0.5},
+    {"name": "OstacleTri01", "position":[600,20], "angle":0.0, "scale":1.0},
+    {"name": "OstacleTri02", "position":[900,300], "angle":0.0, "scale":1.0},
+  ]
+}

@@ -58,7 +58,7 @@ public class MenuScreen implements Screen {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Supply-Bold.otf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = optionsFontSize;
-		parameter.borderWidth = 4f;
+		parameter.borderWidth = 1.0f;
 		parameter.borderColor = Color.BLACK;
 		optionsFont = generator.generateFont(parameter);
 		optionsFont.setColor(Color.GREEN);
@@ -78,11 +78,8 @@ public class MenuScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		HandleInput();
-
 		DrawFrame();
-
 		DrawLogo();
-
 		DrawOptions();
 	}
 
@@ -174,6 +171,7 @@ public class MenuScreen implements Screen {
 		// TODO Auto-generated method stub
 		batch.dispose();
 		optionsFont.dispose();
+		logoFont.dispose();
 		shapeRenderer.dispose();
 	}
 
