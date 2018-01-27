@@ -113,7 +113,7 @@ public class PlayScreen implements Screen {
 
 		batch.end();
 
-		map.captureCollectibles(player);
+		map.captureCollectibles(player, particleManager);
 
 	}
 

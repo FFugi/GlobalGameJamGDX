@@ -13,7 +13,8 @@
     {"name": "gatehorizontal", "position": [400, 490], "count": 2},
     {"name": "gatevertical", "position": [710, 190], "count": 3},
     {"name": "gatevertical", "position": [910, 0], "count": 4},
-    {"name": "gatevertical", "position": [1310, 390], "count": 5}
+    {"name": "gatevertical", "position": [1310, 390], "count": 5},
+    {"name": "gatehorizontal", "position": [700, 0], "scale": [2, 1.0], "count": 6}
   ],
   "collectibles": [
     [50, 50],
@@ -23,6 +24,7 @@
     [960,250],
     [1060,550]
   ],
+  "goal" : [790, -20],
   "instances":[
     {"name": "horizontalBorder", "position":[20,0], "scale":[0.45,1.0]},
     {"name": "horizontalBorder", "position":[880,0], "scale":[0.5,1.0]},
