@@ -102,6 +102,8 @@ public class PlayScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         map.collectibles.forEach(c -> c.Draw(shapeRenderer));
+        map.gates.forEach(c -> c.Draw(shapeRenderer));
+        map.updateGates();
 
 		player.Draw(batch);
 
@@ -109,7 +111,7 @@ public class PlayScreen implements Screen {
 		batch.begin();
 
 		
-	//	debugRenderer.render(world, debugMatrix);
+		debugRenderer.render(world, debugMatrix);
 
 		batch.end();
 

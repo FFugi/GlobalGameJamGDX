@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Rock {
-    private Vector2[] vertices;
-    private Body body;
+    protected Vector2[] vertices;
+    protected Body body;
 	
 	public Body getBody() {
 		return body;
@@ -35,7 +35,7 @@ public class Rock {
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
 		fixtureDef.filter.categoryBits = 1;
-		
+
 		this.body = world.createBody(bodyDef);
 		 
 		Fixture fixture = this.body.createFixture(fixtureDef);
