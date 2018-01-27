@@ -89,8 +89,7 @@ public class PlayScreen implements Screen {
 		deltaTime = Gdx.graphics.getDeltaTime();
 		HandleInput();
 
-
-		world.step(1/30f, 6, 2);
+		world.step(1 / 30f, 6, 2);
 
 		SetCamera();
 
@@ -98,28 +97,21 @@ public class PlayScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		soundManager.draw(shapeRenderer);
+		shapeRenderer.setProjectionMatrix(camera.combined);
 
-        soundManager.draw(shapeRenderer);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-
-        map.collectibles.forEach(c -> c.Draw(shapeRenderer));
-        map.gates.forEach(c -> c.Draw(shapeRenderer));
-        map.updateGates();
-
+		map.collectibles.forEach(c -> c.Draw(shapeRenderer));
+		map.gates.forEach(c -> c.Draw(shapeRenderer));
+		map.updateGates();
 
 		player.Draw(batch);
 
-
-	
-
-
-		debugRenderer.render(world, debugMatrix);
+		// debugRenderer.render(world, debugMatrix);
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		particleManager.DisplayParticles(shapeRenderer);
-		
-		
+
 		// For debug purpose
 		batch.begin();
 
@@ -211,10 +203,17 @@ public class PlayScreen implements Screen {
 			public void beginContact(Contact contact) {
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
-				if (fixtureB.getBody().getUserData() instanceof SoundParticle) {
-					fixtureB.getBody().setLinearVelocity(0, 0);
+				if (fixtureB.getBody().getUserData() instanceof SoundParticle
+						&& fixtureA.getBody().getUserData() instanceof Rock) {
+					if (fixtureA.getBody().getUserData() instanceof Gate) {
+						Vector2 vector = fixtureB.getBody().getLinearVelocity();
+						fixtureB.getBody().setLinearVelocity(vector.scl(0.3f));
+					} else {
+						fixtureB.getBody().setLinearVelocity(0, 0);
+					}
 				}
-				if (fixtureA.getBody().getUserData() instanceof SoundParticle) {
+				if (fixtureA.getBody().getUserData() instanceof SoundParticle
+						&& (fixtureB.getBody().getUserData() instanceof Rock)) {
 					fixtureA.getBody().setLinearVelocity(0, 0);
 				}
 			}
