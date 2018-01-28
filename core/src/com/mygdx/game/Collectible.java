@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -30,7 +31,9 @@ public class Collectible {
 			renderer.setColor(0.7f, 0.1f, 0f, progress);
 		} else {
 			float progress = (blinkTimer - lightenTime) / disappearTime;
-			renderer.setColor(0.7f, 0.1f, 0f, 1-progress);
+			Color color = new Color(0xff4500ff);
+			color.a = 1 - progress;
+			renderer.setColor(color);
 		}
 		renderer.circle(position.x, position.y, radius);
 		renderer.end();

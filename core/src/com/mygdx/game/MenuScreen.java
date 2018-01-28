@@ -163,7 +163,6 @@ public class MenuScreen implements Screen {
 			}
 		}
 		if (game.gamepad != null) {
-		    Gdx.app.log("Pov", game.gamepad.getPov(0).name());
 		    if (game.gamepad.getPov(0) != lastPov) {
 				if (game.gamepad.getPov(0) == PovDirection.north) {
 					menuPosition--;

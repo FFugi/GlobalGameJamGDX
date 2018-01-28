@@ -45,7 +45,6 @@ public class NameInputScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
 		stage.draw();
-		System.out.println(textField.getText());
 		HandeInput();
 	}
 
