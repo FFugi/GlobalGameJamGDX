@@ -18,6 +18,7 @@ public class GameMap {
 	public List<Collectible> collectibles;
 	private World world;
 	private List<Rock> objects;
+	public Goal goal;
 
 	GameMap(World world) {
 		this.world = world;
@@ -111,7 +112,8 @@ public class GameMap {
 				map.collectibles.add(new Collectible(position));
 			}
 		}
-
+		JsonValue goal = jsonData.get("goal");
+		map.goal = new Goal(new Vector2(goal.getFloat(0), goal.getFloat(1)));
 		return map;
 	}
 

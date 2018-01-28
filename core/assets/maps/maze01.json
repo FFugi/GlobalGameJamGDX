@@ -24,7 +24,7 @@
     [960,250],
     [1060,550]
   ],
-  "goal" : [790, -20],
+  "goal" : [820, -100],
   "instances":[
     {"name": "horizontalBorder", "position":[20,0], "scale":[0.45,1.0]},
     {"name": "horizontalBorder", "position":[880,0], "scale":[0.5,1.0]},

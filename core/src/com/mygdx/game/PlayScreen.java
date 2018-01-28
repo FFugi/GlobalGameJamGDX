@@ -114,6 +114,9 @@ public class PlayScreen implements Screen {
 		batch.end();
 
 		map.captureCollectibles(player, particleManager);
+		if(map.goal.update(player, particleManager)) {
+			System.out.println("Congrats");
+		}
 
 	}
 
