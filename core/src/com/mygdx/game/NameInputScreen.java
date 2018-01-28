@@ -101,7 +101,7 @@ public class NameInputScreen implements Screen {
 	public void HandeInput() {
 
 		if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
-			this.game.leaderboard.add(textField.getText(), (float) (TimeUtils.millis() - game.timeWhenStarted) / 1000,
+			this.game.leaderboard.add(textField.getText(), game.finaltime,
 					game.emits);
 			this.game.leaderboard.save();
 			this.game.setScreen(game.victoryScreen);

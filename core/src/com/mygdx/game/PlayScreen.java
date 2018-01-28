@@ -153,7 +153,7 @@ public class PlayScreen implements Screen , TextInputListener {
 		batch.begin();
 		backGroundSprite.draw(batch);
 		batch.end();
-
+		System.out.println(String.valueOf((float) (TimeUtils.millis() - game.timeWhenStarted) / 1000));
 		Gdx.gl.glEnable(GL30.GL_BLEND);
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -179,6 +179,7 @@ public class PlayScreen implements Screen , TextInputListener {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
+			game.finaltime=(float) (TimeUtils.millis() - game.timeWhenStarted) / 1000;
 			this.game.setScreen(game.inputScreen);
 		}
 

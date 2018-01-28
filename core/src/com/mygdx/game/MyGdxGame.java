@@ -17,6 +17,7 @@ public class MyGdxGame extends Game {
 	
 	public int emits;
 	public long timeWhenStarted;
+	float finaltime;
 	
 	@Override
 	public void create() {
