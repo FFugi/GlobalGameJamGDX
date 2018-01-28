@@ -36,7 +36,7 @@ public class Player extends GameObject {
 		fixtureDef.density = 1f;
 		fixtureDef.friction=0;
 		fixtureDef.filter.categoryBits = 4;
-		fixtureDef.isSensor=true;
+		//fixtureDef.isSensor=true;
 		
 		body = world.createBody(bodyDef);
 		 

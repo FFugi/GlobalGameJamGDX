@@ -9,8 +9,11 @@ public class MyGdxGame extends Game {
 	MenuScreen menuScreen;
 	VictoryScreen victoryScreen;	
 	
+	Leaderboard leaderboard;
+	
 	@Override
 	public void create() {
+		leaderboard = new Leaderboard();
 		playScreen = new PlayScreen("path", this);
 		menuScreen = new MenuScreen(this);
 		victoryScreen = new VictoryScreen(this);

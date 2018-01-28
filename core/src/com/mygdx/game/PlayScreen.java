@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class PlayScreen implements Screen {
 
@@ -48,6 +49,9 @@ public class PlayScreen implements Screen {
 	private float deltaTime;
 	private ShapeRenderer shapeRenderer;
 
+	private int emits;
+	private long timeWhenStarted;
+	
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
 		batch = new SpriteBatch();
@@ -79,8 +83,7 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-
+		timeWhenStarted=TimeUtils.millis();
 	}
 
 	@Override
@@ -119,7 +122,10 @@ public class PlayScreen implements Screen {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
+			this.game.leaderboard.add("Player", (float)(TimeUtils.millis()-timeWhenStarted)/1000, emits);
+			this.game.leaderboard.save();
 			this.game.setScreen(game.victoryScreen);
+			
 		}
 
 	}
@@ -157,7 +163,6 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -195,7 +200,9 @@ public class PlayScreen implements Screen {
 			 * position.x = v3.x; position.y = v3.y;
 			 */
 			Vector2 position = player.getPosition();
-			particleManager.RequestBurst(position, new Color(0, 1, 0, 0));
+			if(particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
+				emits++;
+			}
 			SoundManager.GetInstance().playEmitSound();
 		}
 	}

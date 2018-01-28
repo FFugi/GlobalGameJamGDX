@@ -22,14 +22,17 @@ public class ParticleManager {
 		}
 	}
 
-	public void RequestBurst(Vector2 position, Color color) {
+	public boolean RequestBurst(Vector2 position, Color color) {
+		boolean canEmit=false;
 		for (ParticlePool particlePool : particlepools) {
 			if (particlePool.isAvailable()) {
 				particlePool.Burst(position, color);
+				canEmit=true;
 				break;
 			}
 		}
 		particlepools.sort((p1, p2) -> (int)(p1.timeWhenActivated - p2.timeWhenActivated));
+		return canEmit;
 	}
 
 	public void DisplayParticles(ShapeRenderer shaperenderer) {
