@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,26 +19,35 @@ public class Leaderboard {
     private Preferences prefs;
 
     public Leaderboard() {
-       this.records = new ArrayList<Record>();
        load();
     }
 
     public void load() {
-        this.prefs = Gdx.app.getPreferences("leaderboard");
-        Json json = new Json();
-        if (!prefs.getString("records").isEmpty()) {
-            records = json.fromJson(List.class, prefs.getString("records"));
+        records = new ArrayList<>();
+        prefs = Gdx.app.getPreferences("leaderboard");
+        if (!prefs.getString("leaderboard").isEmpty()) {
+            JsonValue data = new JsonReader().parse(prefs.getString("leaderboard"));
+            JsonValue.JsonIterator iterator = data.get("records").iterator();
+            while (iterator.hasNext()) {
+                JsonValue record = iterator.next();
+                String name = record.getString("name");
+                float time = record.getFloat("time");
+                int pulses = record.getInt("pulses");
+                records.add(new Record(name, time, pulses));
+            }
         }
     }
 
     public void add(String name, float time, int pulses) {
         records.add(new Record(name, time, pulses));
+        save();
     }
 
     public void save() {
         Json json = new Json();
-        json.setElementType(List.class, "records", Record.class);
-        prefs.putString("records", json.prettyPrint(records));
+        json.setElementType(Leaderboard.class, "records", Record.class);
+        prefs.putString("leaderboard", json.prettyPrint(this));
+        prefs.flush();
     }
 
     public List<Record> getRecordsBy(Ordering ordering) {

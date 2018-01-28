@@ -6,10 +6,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -107,6 +104,9 @@ public class PlayScreen implements Screen {
 		backGroundSprite.draw(batch);
 		batch.end();
 		
+
+        Gdx.gl.glEnable(GL30.GL_BLEND);
+
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		map.collectibles.forEach(c -> c.Draw(shapeRenderer));
@@ -118,8 +118,16 @@ public class PlayScreen implements Screen {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		particleManager.DisplayParticles(shapeRenderer);
+
 		
 		player.Draw(shapeRenderer);
+
+		map.goal.draw(shapeRenderer);
+        Gdx.gl.glDisable(GL30.GL_BLEND);
+
+
+
+
 
 		
 
