@@ -42,5 +42,10 @@ public class MyGdxGame extends Game {
 	public void dispose() {
 		Gdx.app.exit();
 	}
+	
+	public void Reset() {
+		playScreen = new PlayScreen("path", this);
+		setScreen(menuScreen);
+	}
 
 }
