@@ -32,7 +32,7 @@ public class Leaderboard {
                 JsonValue record = iterator.next();
                 String name = record.getString("name");
                 float time = record.getFloat("time");
-                int pulses = record.getInt("pulses");
+                int pulses = record.getInt("pulses", 0);
                 records.add(new Record(name, time, pulses));
             }
         }
