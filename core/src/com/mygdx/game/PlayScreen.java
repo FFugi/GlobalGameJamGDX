@@ -55,7 +55,7 @@ public class PlayScreen implements Screen {
 		this.game = game;
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
-		background = new Texture("graphics/background.png");
+		background = new Texture("graphics/Background.png");
 		playerSprite = new Sprite(img);
 		backGroundSprite = new Sprite(background);
 		backGroundSprite.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
