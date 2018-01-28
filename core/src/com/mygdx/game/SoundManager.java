@@ -33,5 +33,9 @@ public class SoundManager {
 	public void playCollectSound() {
 		collect.play(1.0f);
 	}
-	
+	public void dispose() {
+		music.dispose();
+		emit.dispose();
+		collect.dispose();
+	}
 }

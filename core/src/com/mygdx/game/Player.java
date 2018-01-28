@@ -23,7 +23,7 @@ public class Player extends GameObject {
 		 
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(100, 100);
+		bodyDef.position.set(100, 70);
 		bodyDef.fixedRotation=true;
 		bodyDef.linearDamping=0;
 		
@@ -36,6 +36,7 @@ public class Player extends GameObject {
 		fixtureDef.density = 1f;
 		fixtureDef.friction=0;
 		fixtureDef.filter.categoryBits = 4;
+		fixtureDef.isSensor=true;
 		
 		body = world.createBody(bodyDef);
 		 

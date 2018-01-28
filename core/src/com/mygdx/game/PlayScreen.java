@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import java.util.List;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -39,14 +40,16 @@ public class PlayScreen implements Screen {
 
 	private GameMap map;
 
+	private MyGdxGame game;
+
 	private Box2DDebugRenderer debugRenderer;
 	private Matrix4 debugMatrix;
 
 	private float deltaTime;
 	private ShapeRenderer shapeRenderer;
 
-	public PlayScreen(String mapPath) {
-
+	public PlayScreen(String mapPath, MyGdxGame game) {
+		this.game = game;
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		playerSprite = new Sprite(img);
@@ -92,7 +95,7 @@ public class PlayScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		map.collectibles.forEach(c -> c.Draw(shapeRenderer));
@@ -110,13 +113,13 @@ public class PlayScreen implements Screen {
 
 		batch.end();
 
-
-		if(map.captureCollectibles(player, particleManager)) {
+		if (map.captureCollectibles(player, particleManager)) {
 			SoundManager.GetInstance().playCollectSound();
 		}
 
-		if(map.goal.update(player, particleManager)) {
+		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
+			this.game.setScreen(game.victoryScreen);
 		}
 
 	}
@@ -186,14 +189,13 @@ public class PlayScreen implements Screen {
 		player.setVelocity(horizontalInput, verticalInput);
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-		/*	int x = Gdx.input.getX();
-			int y = Gdx.input.getY();
-			Vector3 v3 = camera.unproject(new Vector3(x, y, 0));
-			Vector2 position = new Vector2();
-			position.x = v3.x;
-			position.y = v3.y;*/
+			/*
+			 * int x = Gdx.input.getX(); int y = Gdx.input.getY(); Vector3 v3 =
+			 * camera.unproject(new Vector3(x, y, 0)); Vector2 position = new Vector2();
+			 * position.x = v3.x; position.y = v3.y;
+			 */
 			Vector2 position = player.getPosition();
-			particleManager.RequestBurst(position, new Color(0,1,0,0));
+			particleManager.RequestBurst(position, new Color(0, 1, 0, 0));
 			SoundManager.GetInstance().playEmitSound();
 		}
 	}
@@ -208,8 +210,8 @@ public class PlayScreen implements Screen {
 				if (fixtureB.getBody().getUserData() instanceof SoundParticle
 						&& fixtureA.getBody().getUserData() instanceof Rock) {
 					if (fixtureA.getBody().getUserData() instanceof Gate) {
-						SoundParticle particle=(SoundParticle) fixtureB.getBody().getUserData();
-						particle.isOnDoor=true;
+						SoundParticle particle = (SoundParticle) fixtureB.getBody().getUserData();
+						particle.isOnDoor = true;
 					}
 					fixtureB.getBody().setLinearVelocity(0, 0);
 
@@ -217,8 +219,8 @@ public class PlayScreen implements Screen {
 				if (fixtureA.getBody().getUserData() instanceof SoundParticle
 						&& (fixtureB.getBody().getUserData() instanceof Rock)) {
 					if (fixtureB.getBody().getUserData() instanceof Gate) {
-						SoundParticle particle=(SoundParticle) fixtureA.getBody().getUserData();
-						particle.isOnDoor=true;
+						SoundParticle particle = (SoundParticle) fixtureA.getBody().getUserData();
+						particle.isOnDoor = true;
 					}
 					fixtureA.getBody().setLinearVelocity(0, 0);
 

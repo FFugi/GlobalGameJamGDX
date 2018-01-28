@@ -7,11 +7,13 @@ public class MyGdxGame extends Game {
 
 	PlayScreen playScreen;
 	MenuScreen menuScreen;
-
+	VictoryScreen victoryScreen;	
+	
 	@Override
 	public void create() {
-		playScreen = new PlayScreen("path");
+		playScreen = new PlayScreen("path", this);
 		menuScreen = new MenuScreen(this);
+		victoryScreen = new VictoryScreen(this);
 		SoundManager.GetInstance().playBgMusic();
 		setScreen(menuScreen);
 	}
