@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -48,13 +49,12 @@ public class Player extends GameObject {
 		
 	}
 
-	@Override
-	public void Draw(SpriteBatch batch) {
-		sprite.setPosition(body.getPosition().x-sprite.getWidth()/2, body.getPosition().y-sprite.getHeight()/2);
+	public void Draw(ShapeRenderer renderer) {
 		
-		batch.begin();
-		batch.draw(sprite, sprite.getX(), sprite.getY());
-		batch.end();
+		renderer.begin(ShapeRenderer.ShapeType.Filled);
+		renderer.setColor(0, 1, 0, 1);
+		renderer.circle(body.getPosition().x, body.getPosition().y, 10);
+		renderer.end();
 	}
 
 	public void setVelocity(float horizontalInput, float verticalInput) {

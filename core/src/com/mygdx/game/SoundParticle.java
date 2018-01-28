@@ -39,10 +39,6 @@ public class SoundParticle extends GameObject {
 		isOnDoor=false;
 	}
 
-	@Override
-	public void Draw(SpriteBatch batch) {
-		System.out.println("drawing");
-	}
 
 	public void Draw(ShapeRenderer shapeRenderer, float progress, Color color) {
 		float radius = 0;

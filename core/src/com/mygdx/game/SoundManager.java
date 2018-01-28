@@ -24,7 +24,9 @@ public class SoundManager {
 	}
 	
 	public void playBgMusic() {
-		music.play(0.1f);
+
+		//music.play(0.1f, 4, 1);
+		music.loop(0.25f, 0.8f, 1);
 	}
 	
 	public void playEmitSound() {

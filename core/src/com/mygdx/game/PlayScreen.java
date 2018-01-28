@@ -29,7 +29,9 @@ public class PlayScreen implements Screen {
 
 	private SpriteBatch batch;
 	private Texture img;
+	private Texture background;
 	private Sprite playerSprite;
+	private Sprite backGroundSprite;
 	private OrthographicCamera camera;
 
 	private ParticleManager particleManager;
@@ -51,12 +53,15 @@ public class PlayScreen implements Screen {
 
 	private int emits;
 	private long timeWhenStarted;
-	
+
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
+		background = new Texture("graphics/background.png");
 		playerSprite = new Sprite(img);
+		backGroundSprite = new Sprite(background);
+		backGroundSprite.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -83,7 +88,7 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void show() {
-		timeWhenStarted=TimeUtils.millis();
+		timeWhenStarted = TimeUtils.millis();
 	}
 
 	@Override
@@ -94,11 +99,14 @@ public class PlayScreen implements Screen {
 		world.step(1 / 30f, 6, 2);
 
 		SetCamera();
-
-		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		//batch.setProjectionMatrix(camera.combined);
+		
+		batch.begin();
+		backGroundSprite.draw(batch);
+		batch.end();
+		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		map.collectibles.forEach(c -> c.Draw(shapeRenderer));
@@ -110,11 +118,10 @@ public class PlayScreen implements Screen {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		particleManager.DisplayParticles(shapeRenderer);
-		player.Draw(batch);
-		// For debug purpose
-		batch.begin();
+		
+		player.Draw(shapeRenderer);
 
-		batch.end();
+		
 
 		if (map.captureCollectibles(player, particleManager)) {
 			SoundManager.GetInstance().playCollectSound();
@@ -122,10 +129,10 @@ public class PlayScreen implements Screen {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
-			this.game.leaderboard.add("Player", (float)(TimeUtils.millis()-timeWhenStarted)/1000, emits);
+			this.game.leaderboard.add("Player", (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
 			this.game.leaderboard.save();
 			this.game.setScreen(game.victoryScreen);
-			
+
 		}
 
 	}
@@ -200,7 +207,7 @@ public class PlayScreen implements Screen {
 			 * position.x = v3.x; position.y = v3.y;
 			 */
 			Vector2 position = player.getPosition();
-			if(particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
+			if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
 				emits++;
 			}
 			SoundManager.GetInstance().playEmitSound();
