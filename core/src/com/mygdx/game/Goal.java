@@ -2,8 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 
 public class Goal {
     private Color color;
@@ -30,5 +30,12 @@ public class Goal {
 
         captured = position.dst(player.getPosition()) <= player.getRadius() + 10;
         return captured;
+    }
+
+    public void draw(ShapeRenderer renderer) {
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(1, 1, 1, 1 * (burstTimer/5));
+        renderer.circle(position.x, position.y, 20 * (burstTimer/5));
+        renderer.end();
     }
 }
