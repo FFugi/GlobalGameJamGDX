@@ -6,6 +6,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
@@ -30,6 +35,7 @@ public class PlayScreen implements Screen , TextInputListener {
 
 	private String playerName;
 	
+
 	private SpriteBatch batch;
 	private Texture img;
 	private Texture background;
@@ -57,12 +63,14 @@ public class PlayScreen implements Screen , TextInputListener {
 	private int emits;
 	private long timeWhenStarted;
 
+	private ControllerListener gamepadListener;
+
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
 		emits=0;
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
-		background = new Texture("graphics/background.png");
+		background = new Texture("graphics/Background.png");
 		playerSprite = new Sprite(img);
 		backGroundSprite = new Sprite(background);
 		backGroundSprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
@@ -88,11 +96,42 @@ public class PlayScreen implements Screen , TextInputListener {
 		SetCollisionListener();
 
 		particleManager = new ParticleManager(world);
+
 	}
 
-	@Override
+    private void firePulse() {
+        Vector2 position = player.getPosition();
+        if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
+            emits++;
+            SoundManager.GetInstance().playEmitSound();
+        }
+    }
+
+    @Override
 	public void show() {
 		timeWhenStarted = TimeUtils.millis();
+
+        if (game.gamepad != null) {
+            gamepadListener = new ControllerAdapter() {
+                static final float threshold = 0.2f;
+                @Override
+                public boolean buttonDown(Controller controller, int buttonCode) {
+                    firePulse();
+                    return super.buttonDown(controller, buttonCode);
+                }
+
+                @Override
+                public boolean axisMoved(Controller controller, int axisIndex, float value) {
+                    float xAxis = controller.getAxis(0);
+                    float yAxis = controller.getAxis(1);
+                    xAxis = Math.abs(xAxis) > threshold ? xAxis : 0;
+                    yAxis = Math.abs(yAxis) > threshold ? yAxis : 0;
+                    player.setVelocity(Math.signum(xAxis), -Math.signum(yAxis));
+                    return super.axisMoved(controller, axisIndex, value);
+                }
+            };
+            game.gamepad.addListener(gamepadListener);
+        }
 	}
 
 	@Override
@@ -101,7 +140,7 @@ public class PlayScreen implements Screen , TextInputListener {
 		HandleInput();
 
 		world.step(1 / 30f, 6, 2);
- 
+
 		SetCamera();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -136,6 +175,7 @@ public class PlayScreen implements Screen , TextInputListener {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
+
 			playerName="";
 			Gdx.input.getTextInput(this, "Put your name!", "", "");
 		
@@ -145,6 +185,7 @@ public class PlayScreen implements Screen , TextInputListener {
 			}
 			
 			this.game.leaderboard.add(playerName, (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
+
 			this.game.leaderboard.save();
 			this.game.setScreen(game.victoryScreen);
 
@@ -198,6 +239,9 @@ public class PlayScreen implements Screen , TextInputListener {
 	public void dispose() {
 		batch.dispose();
 		img.dispose();
+		if (game.gamepad != null) {
+            game.gamepad.removeListener(gamepadListener);
+        }
 	}
 
 	public void HandleInput() {
@@ -213,7 +257,9 @@ public class PlayScreen implements Screen , TextInputListener {
 		} else if (Gdx.input.isKeyPressed(Keys.D)) {
 			horizontalInput = 1;
 		}
-		player.setVelocity(horizontalInput, verticalInput);
+		if (game.gamepad == null) {
+            player.setVelocity(horizontalInput, verticalInput);
+        }
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			/*
@@ -221,11 +267,7 @@ public class PlayScreen implements Screen , TextInputListener {
 			 * camera.unproject(new Vector3(x, y, 0)); Vector2 position = new Vector2();
 			 * position.x = v3.x; position.y = v3.y;
 			 */
-			Vector2 position = player.getPosition();
-			if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
-				emits++;
-			}
-			SoundManager.GetInstance().playEmitSound();
+            firePulse();
 		}
 	}
 
@@ -283,12 +325,13 @@ public class PlayScreen implements Screen , TextInputListener {
 
 	@Override
 	public void input(String text) {
-		// TODO Auto-generated method stub
 		playerName=text;
+
 	}
 
 	@Override
 	public void canceled() {
 		Gdx.input.getTextInput(this, "Put your name!", "", "test");	
+
 	}
 }
