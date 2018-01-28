@@ -25,7 +25,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class PlayScreen implements Screen {
 
-	private SoundManager soundManager;
 	private SpriteBatch batch;
 	private Texture img;
 	private Sprite playerSprite;
@@ -70,7 +69,6 @@ public class PlayScreen implements Screen {
 
 		shapeRenderer = new ShapeRenderer();
 
-		soundManager = new SoundManager(world);
 		SetCollisionListener();
 
 		particleManager = new ParticleManager(world);
@@ -94,8 +92,7 @@ public class PlayScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		soundManager.draw(shapeRenderer);
+		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		map.collectibles.forEach(c -> c.Draw(shapeRenderer));
@@ -113,7 +110,9 @@ public class PlayScreen implements Screen {
 
 		batch.end();
 
-		map.captureCollectibles(player);
+		if(map.captureCollectibles(player)) {
+			SoundManager.GetInstance().playCollectSound();
+		}
 
 	}
 
@@ -190,6 +189,7 @@ public class PlayScreen implements Screen {
 			position.y = v3.y;*/
 			Vector2 position = player.getPosition();
 			particleManager.RequestBurst(position, new Color(0,1,0,0));
+			SoundManager.GetInstance().playEmitSound();
 		}
 	}
 
