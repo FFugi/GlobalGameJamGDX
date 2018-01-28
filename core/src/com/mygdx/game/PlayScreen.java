@@ -6,6 +6,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -51,6 +55,8 @@ public class PlayScreen implements Screen {
 	private int emits;
 	private long timeWhenStarted;
 
+	private ControllerListener gamepadListener;
+
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
 		batch = new SpriteBatch();
@@ -81,11 +87,42 @@ public class PlayScreen implements Screen {
 		SetCollisionListener();
 
 		particleManager = new ParticleManager(world);
+
 	}
 
-	@Override
+    private void firePulse() {
+        Vector2 position = player.getPosition();
+        if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
+            emits++;
+            SoundManager.GetInstance().playEmitSound();
+        }
+    }
+
+    @Override
 	public void show() {
 		timeWhenStarted = TimeUtils.millis();
+
+        if (game.gamepad != null) {
+            gamepadListener = new ControllerAdapter() {
+                static final float threshold = 0.2f;
+                @Override
+                public boolean buttonDown(Controller controller, int buttonCode) {
+                    firePulse();
+                    return super.buttonDown(controller, buttonCode);
+                }
+
+                @Override
+                public boolean axisMoved(Controller controller, int axisIndex, float value) {
+                    float xAxis = controller.getAxis(0);
+                    float yAxis = controller.getAxis(1);
+                    xAxis = Math.abs(xAxis) > threshold ? xAxis : 0;
+                    yAxis = Math.abs(yAxis) > threshold ? yAxis : 0;
+                    player.setVelocity(Math.signum(xAxis), -Math.signum(yAxis));
+                    return super.axisMoved(controller, axisIndex, value);
+                }
+            };
+            game.gamepad.addListener(gamepadListener);
+        }
 	}
 
 	@Override
@@ -191,6 +228,9 @@ public class PlayScreen implements Screen {
 	public void dispose() {
 		batch.dispose();
 		img.dispose();
+		if (game.gamepad != null) {
+            game.gamepad.removeListener(gamepadListener);
+        }
 	}
 
 	public void HandleInput() {
@@ -206,7 +246,9 @@ public class PlayScreen implements Screen {
 		} else if (Gdx.input.isKeyPressed(Keys.D)) {
 			horizontalInput = 1;
 		}
-		player.setVelocity(horizontalInput, verticalInput);
+		if (game.gamepad == null) {
+            player.setVelocity(horizontalInput, verticalInput);
+        }
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			/*
@@ -214,11 +256,7 @@ public class PlayScreen implements Screen {
 			 * camera.unproject(new Vector3(x, y, 0)); Vector2 position = new Vector2();
 			 * position.x = v3.x; position.y = v3.y;
 			 */
-			Vector2 position = player.getPosition();
-			if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
-				emits++;
-			}
-			SoundManager.GetInstance().playEmitSound();
+            firePulse();
 		}
 	}
 

@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 
 public class MyGdxGame extends Game {
 
@@ -10,9 +12,14 @@ public class MyGdxGame extends Game {
 	VictoryScreen victoryScreen;	
 	
 	Leaderboard leaderboard;
+	Controller gamepad;
 	
 	@Override
 	public void create() {
+		gamepad = Controllers.getControllers().size > 0
+				? Controllers.getControllers().get(0)
+				: null;
+
 		leaderboard = new Leaderboard();
 		playScreen = new PlayScreen("path", this);
 		menuScreen = new MenuScreen(this);

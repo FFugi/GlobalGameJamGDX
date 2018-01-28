@@ -4,6 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -35,6 +39,9 @@ public class MenuScreen implements Screen {
 	private float logoTimer;
 	private final static float logoAnimationTime = 5;
 
+	private ControllerListener gamepadListener;
+	private PovDirection lastPov;
+
 	public MenuScreen(MyGdxGame game) {
 
 		this.game = game;
@@ -51,6 +58,7 @@ public class MenuScreen implements Screen {
 
 		SCREENWIDTH = Gdx.graphics.getWidth();
 		SCREENHEIGHT = Gdx.graphics.getHeight();
+		lastPov = PovDirection.center;
 
 	}
 
@@ -73,6 +81,25 @@ public class MenuScreen implements Screen {
 	public void show() {
 		// TODO Auto-generated method stub
 
+		if (game.gamepad != null) {
+			gamepadListener = new ControllerAdapter() {
+				@Override
+				public boolean buttonDown(Controller controller, int buttonIndex) {
+				    if (buttonIndex == 1) {
+						if (menuPosition == 1) {
+							game.setScreen(game.playScreen);
+						} else if (menuPosition == 0) {
+							game.dispose();
+						}
+					} else if (buttonIndex == 2) {
+						game.dispose();
+					}
+					return super.buttonDown(controller, buttonIndex);
+				}
+			};
+
+			game.gamepad.addListener(gamepadListener);
+		}
 	}
 
 	@Override
@@ -135,6 +162,18 @@ public class MenuScreen implements Screen {
 				game.dispose();
 			}
 		}
+		if (game.gamepad != null) {
+		    Gdx.app.log("Pov", game.gamepad.getPov(0).name());
+		    if (game.gamepad.getPov(0) != lastPov) {
+				if (game.gamepad.getPov(0) == PovDirection.north) {
+					menuPosition--;
+				}
+				if (game.gamepad.getPov(0) == PovDirection.south) {
+					menuPosition++;
+				}
+				lastPov = game.gamepad.getPov(0);
+			}
+		}
 		if (menuPosition < 0) {
 			menuPosition = 1;
 		} else if (menuPosition > 1) {
@@ -173,6 +212,8 @@ public class MenuScreen implements Screen {
 		optionsFont.dispose();
 		logoFont.dispose();
 		shapeRenderer.dispose();
+
+		game.gamepad.removeListener(gamepadListener);
 	}
 
 }
