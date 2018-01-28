@@ -10,9 +10,13 @@ public class MyGdxGame extends Game {
 	PlayScreen playScreen;
 	MenuScreen menuScreen;
 	VictoryScreen victoryScreen;	
+	NameInputScreen inputScreen;
 	
 	Leaderboard leaderboard;
 	Controller gamepad;
+	
+	public int emits;
+	public long timeWhenStarted;
 	
 	@Override
 	public void create() {
@@ -24,6 +28,7 @@ public class MyGdxGame extends Game {
 		playScreen = new PlayScreen("path", this);
 		menuScreen = new MenuScreen(this);
 		victoryScreen = new VictoryScreen(this);
+		inputScreen=new NameInputScreen(this);
 		SoundManager.GetInstance().playBgMusic();
 		setScreen(menuScreen);
 	}

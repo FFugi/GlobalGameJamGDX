@@ -60,14 +60,12 @@ public class PlayScreen implements Screen , TextInputListener {
 	private float deltaTime;
 	private ShapeRenderer shapeRenderer;
 
-	private int emits;
-	private long timeWhenStarted;
 
 	private ControllerListener gamepadListener;
 
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
-		emits=0;
+		this.game.emits=0;
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		background = new Texture("graphics/Background.png");
@@ -102,14 +100,14 @@ public class PlayScreen implements Screen , TextInputListener {
     private void firePulse() {
         Vector2 position = player.getPosition();
         if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
-            emits++;
+            game.emits++;
             SoundManager.GetInstance().playEmitSound();
         }
     }
 
     @Override
 	public void show() {
-		timeWhenStarted = TimeUtils.millis();
+		game.timeWhenStarted = TimeUtils.millis();
 
         if (game.gamepad != null) {
             gamepadListener = new ControllerAdapter() {
@@ -175,20 +173,7 @@ public class PlayScreen implements Screen , TextInputListener {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
-
-			playerName="";
-			Gdx.input.getTextInput(this, "Put your name!", "", "");
-		
-			while(true) {
-				System.out.println(playerName);
-				if(!playerName.isEmpty())break;
-			}
-			
-			this.game.leaderboard.add(playerName, (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
-
-			this.game.leaderboard.save();
-			this.game.setScreen(game.victoryScreen);
-
+			this.game.setScreen(game.inputScreen);
 		}
 
 	}
@@ -331,7 +316,7 @@ public class PlayScreen implements Screen , TextInputListener {
 
 	@Override
 	public void canceled() {
-		Gdx.input.getTextInput(this, "Put your name!", "", "test");	
+		Gdx.input.getTextInput(this, "Put your name!", "", "");	
 
 	}
 }

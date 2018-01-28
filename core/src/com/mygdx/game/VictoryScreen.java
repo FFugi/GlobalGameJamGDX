@@ -152,6 +152,9 @@ public class VictoryScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Keys.D)) {
 			toggleOrdering();
 		}
+		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			game.dispose();
+		}
 	}
 
 	private void toggleOrdering() {
