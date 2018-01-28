@@ -12,6 +12,7 @@ public class MyGdxGame extends Game {
 	public void create() {
 		playScreen = new PlayScreen("path");
 		menuScreen = new MenuScreen(this);
+		SoundManager.GetInstance().playBgMusic();
 		setScreen(menuScreen);
 	}
 
@@ -22,7 +23,6 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void dispose() {
-		
 		Gdx.app.exit();
 	}
 
