@@ -126,7 +126,7 @@ public class GameMap {
 		int size = collectibles.size();
 		collectibles.stream()
 			.filter(c -> c.position.dst(player.getPosition()) <= c.radius + player.getRadius())
-			.forEach(c -> particleManager.RequestBurst(c.position, new Color(0xff7f50ff)));
+			.forEach(c -> particleManager.RequestBurst(c.position, new Color(0xff4500ff)));
 
 		collectibles = collectibles.stream()
 				.filter(c -> c.position.dst(player.getPosition()) > c.radius + player.getRadius())
