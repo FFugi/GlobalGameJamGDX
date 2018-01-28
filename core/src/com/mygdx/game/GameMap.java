@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
@@ -17,6 +18,7 @@ public class GameMap {
 	public List<Collectible> collectibles;
 	private World world;
 	private List<Rock> objects;
+	public Goal goal;
 
 	GameMap(World world) {
 		this.world = world;
@@ -110,7 +112,8 @@ public class GameMap {
 				map.collectibles.add(new Collectible(position));
 			}
 		}
-
+		JsonValue goal = jsonData.get("goal");
+		map.goal = new Goal(new Vector2(goal.getFloat(0), goal.getFloat(1)));
 		return map;
 	}
 
@@ -119,8 +122,12 @@ public class GameMap {
 		return objects;
 	}
 
-	public boolean captureCollectibles(Player player) {
+	public boolean captureCollectibles(Player player, ParticleManager particleManager) {
 		int size = collectibles.size();
+		collectibles.stream()
+			.filter(c -> c.position.dst(player.getPosition()) <= c.radius + player.getRadius())
+			.forEach(c -> particleManager.RequestBurst(c.position, new Color(0xff7f50ff)));
+
 		collectibles = collectibles.stream()
 				.filter(c -> c.position.dst(player.getPosition()) > c.radius + player.getRadius())
 				.collect(Collectors.toList());

@@ -110,8 +110,13 @@ public class PlayScreen implements Screen {
 
 		batch.end();
 
-		if(map.captureCollectibles(player)) {
+
+		if(map.captureCollectibles(player, particleManager)) {
 			SoundManager.GetInstance().playCollectSound();
+		}
+
+		if(map.goal.update(player, particleManager)) {
+			System.out.println("Congrats");
 		}
 
 	}
