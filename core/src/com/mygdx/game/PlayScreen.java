@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 public class PlayScreen implements Screen , TextInputListener {
 
-	private String playername;
+	private String playerName;
 	
 	private SpriteBatch batch;
 	private Texture img;
@@ -136,13 +136,15 @@ public class PlayScreen implements Screen , TextInputListener {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
-			InputListener listener = new InputListener();
-			String name = new String();
-			Gdx.input.getTextInput(this, "Put your name!", "Your name!", "test");
+			playerName="";
+			Gdx.input.getTextInput(this, "Put your name!", "", "");
 		
+			while(true) {
+				System.out.println(playerName);
+				if(!playerName.isEmpty())break;
+			}
 			
-			
-			this.game.leaderboard.add("testname", (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
+			this.game.leaderboard.add(playerName, (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
 			this.game.leaderboard.save();
 			this.game.setScreen(game.victoryScreen);
 
@@ -282,12 +284,11 @@ public class PlayScreen implements Screen , TextInputListener {
 	@Override
 	public void input(String text) {
 		// TODO Auto-generated method stub
-		
+		playerName=text;
 	}
 
 	@Override
 	public void canceled() {
-		// TODO Auto-generated method stub
-		
+		Gdx.input.getTextInput(this, "Put your name!", "", "test");	
 	}
 }

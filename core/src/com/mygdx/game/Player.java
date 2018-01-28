@@ -24,8 +24,8 @@ public class Player extends GameObject {
 		 
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(100, 70);
-		//bodyDef.position.set(810, -100); 
+		//bodyDef.position.set(100, 70);
+		bodyDef.position.set(810, 30); 
 		bodyDef.fixedRotation=true;
 		bodyDef.linearDamping=0;
 		
