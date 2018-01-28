@@ -2,11 +2,15 @@ package com.mygdx.game;
 
 import java.util.List;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,8 +26,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class PlayScreen implements Screen {
+public class PlayScreen implements Screen , TextInputListener {
 
+	private String playername;
+	
 	private SpriteBatch batch;
 	private Texture img;
 	private Texture background;
@@ -53,12 +59,13 @@ public class PlayScreen implements Screen {
 
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
+		emits=0;
 		batch = new SpriteBatch();
 		img = new Texture("graphics/light.png");
 		background = new Texture("graphics/background.png");
 		playerSprite = new Sprite(img);
 		backGroundSprite = new Sprite(background);
-		backGroundSprite.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		backGroundSprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -94,18 +101,17 @@ public class PlayScreen implements Screen {
 		HandleInput();
 
 		world.step(1 / 30f, 6, 2);
-
+ 
 		SetCamera();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//batch.setProjectionMatrix(camera.combined);
-		
+		// batch.setProjectionMatrix(camera.combined);
+
 		batch.begin();
 		backGroundSprite.draw(batch);
 		batch.end();
-		
 
-        Gdx.gl.glEnable(GL30.GL_BLEND);
+		Gdx.gl.glEnable(GL30.GL_BLEND);
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -119,17 +125,10 @@ public class PlayScreen implements Screen {
 
 		particleManager.DisplayParticles(shapeRenderer);
 
-		
 		player.Draw(shapeRenderer);
 
 		map.goal.draw(shapeRenderer);
-        Gdx.gl.glDisable(GL30.GL_BLEND);
-
-
-
-
-
-		
+		Gdx.gl.glDisable(GL30.GL_BLEND);
 
 		if (map.captureCollectibles(player, particleManager)) {
 			SoundManager.GetInstance().playCollectSound();
@@ -137,7 +136,13 @@ public class PlayScreen implements Screen {
 
 		if (map.goal.update(player, particleManager)) {
 			System.out.println("Congrats");
-			this.game.leaderboard.add("Player", (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
+			InputListener listener = new InputListener();
+			String name = new String();
+			Gdx.input.getTextInput(this, "Put your name!", "Your name!", "test");
+		
+			
+			
+			this.game.leaderboard.add("testname", (float) (TimeUtils.millis() - timeWhenStarted) / 1000, emits);
 			this.game.leaderboard.save();
 			this.game.setScreen(game.victoryScreen);
 
@@ -272,5 +277,17 @@ public class PlayScreen implements Screen {
 		camera.position.y = player.getPosition().y;
 		camera.update();
 
+	}
+
+	@Override
+	public void input(String text) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void canceled() {
+		// TODO Auto-generated method stub
+		
 	}
 }

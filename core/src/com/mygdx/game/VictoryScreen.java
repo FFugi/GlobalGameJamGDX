@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Game;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.game.Leaderboard.Ordering;
 
 public class VictoryScreen implements Screen {
 
@@ -29,11 +32,19 @@ public class VictoryScreen implements Screen {
 
 	private MyGdxGame game;
 
+	private List<Record> records;
+	
 	private float logoTimer;
 	private final static float logoAnimationTime = 5;
+	
+	private int startY;
+	
+	private Leaderboard.Ordering ordering;
+
+	String name;
 
 	public VictoryScreen(MyGdxGame game) {
-
+		ordering=ordering.TIME;
 		this.game = game;
 		shapeRenderer = new ShapeRenderer();
 
@@ -46,7 +57,8 @@ public class VictoryScreen implements Screen {
 
 		SCREENWIDTH = Gdx.graphics.getWidth();
 		SCREENHEIGHT = Gdx.graphics.getHeight();
-
+		
+		startY=0;
 	}
 
 	private void ConfigureFont() {
@@ -67,33 +79,44 @@ public class VictoryScreen implements Screen {
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-
+		game.leaderboard.load();
 	}
 
 	@Override
 	public void render(float delta) {
+		
 		HandleInput();
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		DrawFrame();
 		DrawLogo();
 		DrawOptions();
 	}
 
 	private void DrawOptions() {
-		String[] menuOptions;
-		menuOptions = new String[] { new String("Score01"), new String("Score02") };
+		List<Record> records=game.leaderboard.getRecordsBy(ordering);
+		
 		int i = 0;
 		batch.begin();
-		for (String option : menuOptions) {
+		for (Record record : records) {
 			optionsFont.setColor(0f, 1f, 0.5f, 1f);
-			optionsFont.draw(batch, option, SCREENWIDTH / 2 - optionsFontSize * option.length() / 3,
-					SCREENHEIGHT / 2.5f + optionsFontSize * i++ * 2);
+			float yValue = SCREENHEIGHT / 1.35f - optionsFontSize  *((i+startY)*  1.5f);
+			if(i+startY>=0) {
+			optionsFont.draw(batch,String.valueOf(i)+". "+ record.name, SCREENWIDTH / 2 - SCREENWIDTH / 3,
+					yValue);
+			optionsFont.draw(batch, String.valueOf(record.pulses), SCREENWIDTH / 2 + SCREENWIDTH / 8,
+					yValue);
+			optionsFont.draw(batch, String.valueOf(record.time), SCREENWIDTH / 2 + SCREENWIDTH / 4,
+					yValue);
+			}
+			i++;
 		}
 		batch.end();
 	}
 
 	private void DrawLogo() {
 		float green = 0;
-		if (logoTimer < logoAnimationTime / 2) {
+		if (logoTimer < logoAnimationTime / 2) { 
 			green = logoTimer / (logoAnimationTime / 2);
 		} else {
 			green = 1 - (logoTimer - (logoAnimationTime / 2)) / (logoAnimationTime / 2);
@@ -117,9 +140,27 @@ public class VictoryScreen implements Screen {
 	}
 
 	private void HandleInput() {
-		if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
-			
-		} 
+		if (Gdx.input.isKeyJustPressed(Keys.W)) {
+			startY++;
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.S)) {
+			startY--;
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.A)) {
+			toggleOrdering();
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.D)) {
+			toggleOrdering();
+		}
+	}
+
+	private void toggleOrdering() {
+		if(ordering==ordering.PULSES) {
+			ordering=ordering.TIME;
+		}
+		else {
+			ordering=ordering.PULSES;
+		}
 	}
 
 	@Override
