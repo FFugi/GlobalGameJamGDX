@@ -64,6 +64,7 @@ public class PlayScreen implements Screen , TextInputListener {
 	private long timeWhenStarted;
 
 	private ControllerListener gamepadListener;
+	long lastFired;
 
 	public PlayScreen(String mapPath, MyGdxGame game) {
 		this.game = game;
@@ -100,10 +101,14 @@ public class PlayScreen implements Screen , TextInputListener {
 	}
 
     private void firePulse() {
-        Vector2 position = player.getPosition();
-        if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
-            emits++;
-            SoundManager.GetInstance().playEmitSound();
+	    if (TimeUtils.millis() - lastFired > 100) {
+            Vector2 position = player.getPosition();
+            if (particleManager.RequestBurst(position, new Color(0, 1, 0, 0))) {
+                emits++;
+                lastFired = TimeUtils.millis();
+                SoundManager.GetInstance().playEmitSound();
+                Gdx.app.log("Firing", "");
+            }
         }
     }
 
@@ -117,7 +122,7 @@ public class PlayScreen implements Screen , TextInputListener {
                 @Override
                 public boolean buttonDown(Controller controller, int buttonCode) {
                     firePulse();
-                    return super.buttonDown(controller, buttonCode);
+                    return false;
                 }
 
                 @Override
