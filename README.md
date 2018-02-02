@@ -2,8 +2,8 @@
 
 ### What is Echo?
 Echo is a game created for Global Game Jam 2018.
-[Global Game Jam](https://globalgamejam.org "Global Game Jam Home Site")
-[Echo on Global Game Jam](https://globalgamejam.org/2018/games/echo-0 "Global Game Jam Home Site")
+* [Global Game Jam](https://globalgamejam.org "Global Game Jam Home Site")
+* [Echo on Global Game Jam](https://globalgamejam.org/2018/games/echo-0 "Global Game Jam Home Site")
 
 ### Game
 You're lost in invisible maze, the only way you can feel the walls is emitting soundwaves. how quick can you get out?
